@@ -15,6 +15,7 @@
 		3EBD78092C4EA13D0069F583 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78082C4EA13D0069F583 /* Base */; };
 		3EBD78112C4EA1970069F583 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78102C4EA1970069F583 /* LoadingViewController.swift */; };
 		3EBD78132C4EA5620069F583 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* ResultViewController.swift */; };
+		3EBD78152C4EBEE30069F583 /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* ResultTableViewCell.swift */; };
 		8CB75DF1CFD24A8C4587396F /* Pods_Cathay_Animation_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 		3EBD780A2C4EA13D0069F583 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EBD78102C4EA1970069F583 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		3EBD78122C4EA5620069F583 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
+		3EBD78142C4EBEE30069F583 /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
 		73484422887A58C087246698 /* Pods-Cathay-Animation-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		9F4803B96DA22A4CC71FB079 /* Pods-Cathay-Animation-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.release.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,6 +82,7 @@
 				3EBD78002C4EA13D0069F583 /* ViewController.swift */,
 				3EBD78102C4EA1970069F583 /* LoadingViewController.swift */,
 				3EBD78122C4EA5620069F583 /* ResultViewController.swift */,
+				3EBD78142C4EBEE30069F583 /* ResultTableViewCell.swift */,
 				3EBD78022C4EA13D0069F583 /* Main.storyboard */,
 				3EBD78052C4EA13D0069F583 /* Assets.xcassets */,
 				3EBD78072C4EA13D0069F583 /* LaunchScreen.storyboard */,
@@ -216,6 +219,7 @@
 				3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */,
 				3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
+				3EBD78152C4EBEE30069F583 /* ResultTableViewCell.swift in Sources */,
 				3EBD78112C4EA1970069F583 /* LoadingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
