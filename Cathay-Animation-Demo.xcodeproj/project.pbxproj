@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E207DA02C4FF90300BFAFE0 /* TabView.swift */; };
 		3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD77FC2C4EA13D0069F583 /* AppDelegate.swift */; };
 		3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD77FE2C4EA13D0069F583 /* SceneDelegate.swift */; };
 		3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78002C4EA13D0069F583 /* ViewController.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cathay_Animation_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E207DA02C4FF90300BFAFE0 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		3EBD77F92C4EA13D0069F583 /* Cathay-Animation-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cathay-Animation-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBD77FC2C4EA13D0069F583 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3EBD77FE2C4EA13D0069F583 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				3EBD78122C4EA5620069F583 /* ResultViewController.swift */,
+				3E207DA02C4FF90300BFAFE0 /* TabView.swift */,
 				7BF922F62C4FBFD6009CC71D /* ResultModel.swift */,
 				3EBD78142C4EBEE30069F583 /* ResultTableViewCell.swift */,
 			);
@@ -236,6 +239,7 @@
 			files = (
 				3EBD78132C4EA5620069F583 /* ResultViewController.swift in Sources */,
 				3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */,
+				3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */,
 				3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
 				3EBD78152C4EBEE30069F583 /* ResultTableViewCell.swift in Sources */,

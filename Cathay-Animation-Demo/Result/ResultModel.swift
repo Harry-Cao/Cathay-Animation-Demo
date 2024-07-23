@@ -7,6 +7,11 @@
 
 import Foundation
 
-struct ResultModel {
+final class ResultModel {
     var num: Int?
+    var pop: Bool = false
+
+    init(num: Int? = nil) {
+        self.num = num
+    }
 }

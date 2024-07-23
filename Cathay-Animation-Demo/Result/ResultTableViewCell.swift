@@ -28,8 +28,26 @@ class ResultTableViewCell: UITableViewCell {
 
     private func setupUI() {
         [container].forEach(contentView.addSubview)
-        container.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(20)
+        container.alpha = 0
+        container.frame = CGRect(x: UIScreen.main.bounds.width, y: 0, width: UIScreen.main.bounds.width - 40, height: 60)
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
+        container.alpha = 1
+    }
+
+    func setup() {
+        container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
+        container.alpha = 1
+    }
+
+    func fadeIn() {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self = self else { return }
+            self.container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
+            self.container.alpha = 1
         }
     }
 }

@@ -9,13 +9,14 @@ import UIKit
 import SnapKit
 
 class ResultViewController: UIViewController {
-    var dataSource: [ResultModel] = {
+    private var dataSource: [ResultModel] = {
         var data = [ResultModel]()
         for i in 0...20 {
             data.append(ResultModel())
         }
         return data
     }()
+    private var animationData = [ResultModel]()
     private let headerView: UIImageView = {
         let imageView = UIImageView()
         imageView.frame.size.height = UIScreen.main.bounds.height
@@ -26,11 +27,13 @@ class ResultViewController: UIViewController {
         let tableView = UITableView()
         tableView.tableHeaderView = headerView
         tableView.contentInsetAdjustmentBehavior = .never
+        tableView.sectionHeaderTopPadding = .zero
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ResultTableViewCell.self, forCellReuseIdentifier: "\(ResultTableViewCell.self)")
         return tableView
     }()
+    private let sectionHeader = TabView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +42,7 @@ class ResultViewController: UIViewController {
     }
 
     private func setupUI() {
+        sectionHeader.alpha = 0
         [tableView].forEach(view.addSubview)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -50,24 +54,41 @@ class ResultViewController: UIViewController {
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
             dataSource = data.map{ ResultModel(num: $0) }
-            tableView.isScrollEnabled = true
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                self.tableView.reloadRows(at: self.dataSource.map{ IndexPath(row: $0.num!, section: 0) }, with: .none)
-            }
-            UIView.animate(withDuration: 0.3) { [self] in
+            tableView.reloadData()
+            UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = 200
                 self.headerView.layer.masksToBounds = true
                 self.headerView.layer.cornerRadius = 40
                 self.headerView.layer.maskedCorners = [.layerMinXMaxYCorner]
+            } completion: { _ in
+                self.sectionHeader.alpha = 1
+                self.fadeInNext()
             }
+        }
+    }
+
+    private func fadeInNext() {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
+            guard let self = self,
+                  let nextIndex = animationData.firstIndex(where: { !$0.pop }),
+                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? ResultTableViewCell else {
+                self?.tableView.isScrollEnabled = true
+                return
+            }
+            animationData[nextIndex].pop = true
+            cell.fadeIn()
+            fadeInNext()
         }
     }
 }
 
 extension ResultViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(dataSource.count)
         return dataSource.count
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return sectionHeader
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -76,12 +97,21 @@ extension ResultViewController: UITableViewDataSource {
             cell.backgroundColor = .yellow
             return cell
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(ResultTableViewCell.self)", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(ResultTableViewCell.self)", for: indexPath) as! ResultTableViewCell
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 68
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let data = dataSource[indexPath.row]
+        animationData.append(data)
     }
 }
 
