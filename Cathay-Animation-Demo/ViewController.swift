@@ -23,6 +23,9 @@ class ViewController: UIViewController {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         let resultVC = ResultViewController()
+//        resultVC.modalPresentationStyle = .formSheet
+//        resultVC.sheetPresentationController?.detents = [.medium(), .large()]
+//        resultVC.sheetPresentationController?.prefersGrabberVisible = true
         resultVC.modalPresentationStyle = .fullScreen
         self.present(resultVC, animated: true)
     }

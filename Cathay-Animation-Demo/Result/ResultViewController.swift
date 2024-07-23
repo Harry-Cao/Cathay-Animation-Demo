@@ -28,6 +28,7 @@ class ResultViewController: UIViewController {
         tableView.tableHeaderView = headerView
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderTopPadding = .zero
+        tableView.showsVerticalScrollIndicator = false
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ResultTableViewCell.self, forCellReuseIdentifier: "\(ResultTableViewCell.self)")
@@ -54,13 +55,13 @@ class ResultViewController: UIViewController {
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
             dataSource = data.map{ ResultModel(num: $0) }
-            tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = 200
                 self.headerView.layer.masksToBounds = true
                 self.headerView.layer.cornerRadius = 40
                 self.headerView.layer.maskedCorners = [.layerMinXMaxYCorner]
             } completion: { _ in
+                self.tableView.reloadData()
                 self.sectionHeader.alpha = 1
                 self.fadeInNext()
             }
