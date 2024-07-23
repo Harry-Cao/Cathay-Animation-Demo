@@ -7,23 +7,13 @@
 
 import UIKit
 import SnapKit
-import Hero
-
-protocol ResultViewControllerDelegate {
-    func onDismiss()
-}
 
 class ResultViewController: UIViewController {
-    var delegate: ResultViewControllerDelegate?
     var dataSource: [Int]?
     private let headerView: UIImageView = {
         let imageView = UIImageView()
-        imageView.heroID = "loading_imageView"
-        imageView.frame.size.height = 200
+        imageView.frame.size.height = UIScreen.main.bounds.height
         imageView.backgroundColor = .red
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 40
-        imageView.layer.maskedCorners = [.layerMinXMaxYCorner]
         return imageView
     }()
     private lazy var tableView: UITableView = {
@@ -36,25 +26,32 @@ class ResultViewController: UIViewController {
         return tableView
     }()
 
-    init(dataSource: [Int] = []) {
-        super.init(nibName: nil, bundle: nil)
-        self.dataSource = dataSource
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.isHeroEnabled = true
         setupUI()
+        requestData()
     }
 
     private func setupUI() {
         [tableView].forEach(view.addSubview)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+
+    private func requestData() {
+        tableView.isScrollEnabled = false
+        MockNetworkHelper.mockRequestData { [weak self] data in
+            guard let self = self else { return }
+            dataSource = data
+            tableView.isScrollEnabled = true
+            tableView.reloadData()
+            UIView.animate(withDuration: 0.3) { [self] in
+                self.headerView.frame.size.height = 200
+                self.headerView.layer.masksToBounds = true
+                self.headerView.layer.cornerRadius = 40
+                self.headerView.layer.maskedCorners = [.layerMinXMaxYCorner]
+            }
         }
     }
 }
@@ -82,7 +79,6 @@ extension ResultViewController: UITableViewDataSource {
 extension ResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        self.isHeroEnabled = false
-        delegate?.onDismiss()
+        self.dismiss(animated: true)
     }
 }
