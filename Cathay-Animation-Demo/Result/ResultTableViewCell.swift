@@ -28,8 +28,6 @@ class ResultTableViewCell: UITableViewCell {
 
     private func setupUI() {
         [container].forEach(contentView.addSubview)
-        container.alpha = 0
-        container.frame = CGRect(x: UIScreen.main.bounds.width, y: 0, width: UIScreen.main.bounds.width - 40, height: 60)
     }
 
     override func prepareForReuse() {
@@ -38,9 +36,14 @@ class ResultTableViewCell: UITableViewCell {
         container.alpha = 1
     }
 
-    func setup() {
-        container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
-        container.alpha = 1
+    func setup(finishLoading: Bool) {
+        if finishLoading {
+            container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
+            container.alpha = 1
+        } else {
+            container.alpha = 0
+            container.frame = CGRect(x: UIScreen.main.bounds.width, y: 0, width: UIScreen.main.bounds.width - 40, height: 60)
+        }
     }
 
     func fadeIn() {

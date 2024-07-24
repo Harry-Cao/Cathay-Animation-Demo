@@ -26,8 +26,9 @@ class ViewController: UIViewController {
 //        resultVC.modalPresentationStyle = .formSheet
 //        resultVC.sheetPresentationController?.detents = [.medium(), .large()]
 //        resultVC.sheetPresentationController?.prefersGrabberVisible = true
-        resultVC.modalPresentationStyle = .fullScreen
-        self.present(resultVC, animated: true)
+        let naviVC = UINavigationController(rootViewController: resultVC)
+        naviVC.modalPresentationStyle = .fullScreen
+        self.present(naviVC, animated: true)
     }
 
 }

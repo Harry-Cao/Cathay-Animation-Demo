@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 class ResultViewController: UIViewController {
+    private let statusBarHeight = UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height
     private var dataSource: [ResultModel] = {
         var data = [ResultModel]()
         for i in 0...20 {
@@ -99,6 +100,7 @@ extension ResultViewController: UITableViewDataSource {
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(ResultTableViewCell.self)", for: indexPath) as! ResultTableViewCell
+        cell.setup(finishLoading: tableView.isScrollEnabled)
         return cell
     }
 
@@ -120,5 +122,13 @@ extension ResultViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y > 10 {
+            tableView.contentInset = UIEdgeInsets(top: (navigationController?.navigationBar.frame.height ?? 0) + (statusBarHeight ?? 0), left: 0, bottom: 0, right: 0)
+        } else {
+            tableView.contentInset = .zero
+        }
     }
 }
