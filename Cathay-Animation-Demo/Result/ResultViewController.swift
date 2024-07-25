@@ -125,8 +125,17 @@ extension ResultViewController: UITableViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > 10 {
-            tableView.contentInset = UIEdgeInsets(top: (navigationController?.navigationBar.frame.height ?? 0) + (statusBarHeight ?? 0), left: 0, bottom: 0, right: 0)
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.configureWithOpaqueBackground()
+        navigationBarAppearance.shadowColor = .clear
+        var alpha: CGFloat = 0.0
+        if scrollView.contentOffset.y > 50 {
+            alpha = (scrollView.contentOffset.y - 50) / (100 - 50)
+        }
+        navigationBarAppearance.backgroundColor = .systemBackground.withAlphaComponent(alpha)
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        if scrollView.contentOffset.y > 50 {
+            tableView.contentInset = UIEdgeInsets(top: (navigationController?.navigationBar.frame.height ?? 0) + (statusBarHeight ?? 0) - 1, left: 0, bottom: 0, right: 0)
         } else {
             tableView.contentInset = .zero
         }
