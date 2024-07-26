@@ -22,6 +22,8 @@ final class BottomSheetInteractionController: UIPercentDrivenInteractiveTransiti
         let transitionY = recognizer.translation(in: viewController?.view).y
         var progress = transitionY / (viewController?.view.bounds.height ?? 0.0)
         progress = min(max(progress, 0.0), 1.0)
+        let velocityY = recognizer.velocity(in: viewController?.view).y
+
         switch recognizer.state {
         case .began:
             interactionInProgress = true
@@ -30,7 +32,8 @@ final class BottomSheetInteractionController: UIPercentDrivenInteractiveTransiti
             update(progress)
         case .ended:
             interactionInProgress = false
-            if progress > 0.3 {
+            let shouldFinish: Bool = progress > 0.12 || (progress > 0 && velocityY > 500)
+            if shouldFinish {
                 finish()
             } else {
                 cancel()

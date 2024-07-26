@@ -22,12 +22,12 @@ final class BottomSheetDismissAnimator: NSObject, UIViewControllerAnimatedTransi
         guard let fromView = transitionContext.view(forKey: .from) else { return }
         let containerView = transitionContext.containerView
 
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveLinear, animations: {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseOut, animations: {
             fromView.frame = containerView.bounds.offsetBy(dx: 0, dy: containerView.bounds.height)
             self.dimmingView?.alpha = 0
         }, completion: { finished in
-            fromView.removeFromSuperview()
-            transitionContext.completeTransition(finished)
+            let complete = transitionContext.transitionWasCancelled ? false : finished
+            transitionContext.completeTransition(complete)
         })
     }
 }

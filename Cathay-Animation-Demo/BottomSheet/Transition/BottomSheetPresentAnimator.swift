@@ -29,7 +29,8 @@ final class BottomSheetPresentAnimator: NSObject, UIViewControllerAnimatedTransi
             toView.frame = containerView.bounds.offsetBy(dx: 0, dy: 0)
             self.dimmingView?.alpha = 1
         }, completion: { finished in
-            transitionContext.completeTransition(finished)
+            let complete = transitionContext.transitionWasCancelled ? false : finished
+            transitionContext.completeTransition(complete)
         })
     }
 }

@@ -55,7 +55,6 @@ extension ViewController: UITableViewDelegate {
             self.present(naviVC, animated: true)
         case .bottomSheet:
             let vc = BottomSheetViewController()
-//            let naviVC = UINavigationController(rootViewController: vc)
             vc.transitioningDelegate = bottomSheetTransition
             vc.modalPresentationStyle = .custom
             self.present(vc, animated: true)
