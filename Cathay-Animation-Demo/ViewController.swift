@@ -53,11 +53,18 @@ extension ViewController: UITableViewDelegate {
             let naviVC = UINavigationController(rootViewController: vc)
             naviVC.modalPresentationStyle = .fullScreen
             self.present(naviVC, animated: true)
-        case .bottomSheet:
+        case .bottomSheet_selfMake:
             let vc = BottomSheetViewController()
             vc.transitioningDelegate = bottomSheetTransition
             vc.modalPresentationStyle = .custom
             self.present(vc, animated: true)
+        case .bottomSheet_system:
+            let vc = BottomSheetViewController()
+            let naviVC = UINavigationController(rootViewController: vc)
+            naviVC.modalPresentationStyle = .formSheet
+            let sheet = naviVC.sheetPresentationController
+            sheet?.detents = [.medium()]
+            self.present(naviVC, animated: true)
         }
     }
 }
@@ -65,14 +72,17 @@ extension ViewController: UITableViewDelegate {
 extension ViewController {
     enum DemoType: CaseIterable {
         case loading
-        case bottomSheet
+        case bottomSheet_selfMake
+        case bottomSheet_system
 
         var title: String {
             switch self {
             case .loading:
                 return "Loadding"
-            case .bottomSheet:
-                return "BottomSheet"
+            case .bottomSheet_selfMake:
+                return "BottomSheet Self Make"
+            case .bottomSheet_system:
+                return "BottomSheet System (iOS 15+)"
             }
         }
     }
