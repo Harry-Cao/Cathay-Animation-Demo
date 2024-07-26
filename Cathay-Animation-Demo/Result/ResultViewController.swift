@@ -35,6 +35,11 @@ class ResultViewController: UIViewController {
         return tableView
     }()
     private let sectionHeader = TabView()
+    private let navigationBarTransformer: NavigationBarTransformer = {
+        let transformer = NavigationBarTransformer()
+        transformer.setTransform(startOffset: 0.0, endOffset: 100.0)
+        return transformer
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +56,7 @@ class ResultViewController: UIViewController {
     }
 
     private func requestData() {
+        navigationBarTransformer.delegate = self
         tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
@@ -124,16 +130,13 @@ extension ResultViewController: UITableViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.shadowColor = .clear
-        var alpha: CGFloat = 0.0
-        if scrollView.contentOffset.y > 50 {
-            alpha = (scrollView.contentOffset.y - 50) / (100 - 50)
-        }
-        navigationBarAppearance.backgroundColor = .systemBackground.withAlphaComponent(alpha)
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-
+        navigationBarTransformer.trackScrollView(scrollView)
         tableView.contentInsetAdjustmentBehavior = scrollView.contentOffset.y > 50 ? .always : .never
+    }
+}
+
+extension ResultViewController: NavigationBarTransformerDelegate {
+    func transformerTargetNavigationBar() -> UINavigationBar? {
+        return navigationController?.navigationBar
     }
 }

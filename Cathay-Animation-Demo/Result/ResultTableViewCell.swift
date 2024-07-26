@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 class ResultTableViewCell: UITableViewCell {
     private let container: UIView = {
@@ -14,6 +13,7 @@ class ResultTableViewCell: UITableViewCell {
         view.backgroundColor = .blue
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 12
+        view.frame.size = CGSize(width: UIScreen.main.bounds.width - 40, height: 60)
         return view
     }()
 
@@ -30,27 +30,18 @@ class ResultTableViewCell: UITableViewCell {
         [container].forEach(contentView.addSubview)
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
-        container.alpha = 1
-    }
-
     func setup(finishLoading: Bool) {
         if finishLoading {
-            container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
-            container.alpha = 1
+            container.frame.origin = CGPoint(x: 20, y: 20)
         } else {
-            container.alpha = 0
-            container.frame = CGRect(x: UIScreen.main.bounds.width, y: 0, width: UIScreen.main.bounds.width - 40, height: 60)
+            container.frame.origin = CGPoint(x: UIScreen.main.bounds.width, y: 20)
         }
     }
 
     func fadeIn() {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            self.container.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
-            self.container.alpha = 1
+            container.frame.origin = CGPoint(x: 20, y: 20)
         }
     }
 }
