@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 class ResultViewController: UIViewController {
-    private let statusBarHeight = UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height
     private var dataSource: [ResultModel] = {
         var data = [ResultModel]()
         for i in 0...20 {
@@ -134,10 +133,7 @@ extension ResultViewController: UITableViewDelegate {
         }
         navigationBarAppearance.backgroundColor = .systemBackground.withAlphaComponent(alpha)
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        if scrollView.contentOffset.y > 50 {
-            tableView.contentInset = UIEdgeInsets(top: (navigationController?.navigationBar.frame.height ?? 0) + (statusBarHeight ?? 0) - 1, left: 0, bottom: 0, right: 0)
-        } else {
-            tableView.contentInset = .zero
-        }
+
+        tableView.contentInsetAdjustmentBehavior = scrollView.contentOffset.y > 50 ? .always : .never
     }
 }
