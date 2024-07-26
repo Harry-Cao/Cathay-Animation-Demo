@@ -10,12 +10,8 @@ import SnapKit
 
 class BottomSheetViewController: UIViewController {
 
-    private let backgroundButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .black.withAlphaComponent(0.3)
-        return button
-    }()
-    private let container: UIView = {
+    private let backgroundButton = UIButton()
+    private(set) var container: UIView = {
         let view = UIView()
         view.backgroundColor = .red
         return view
@@ -24,7 +20,6 @@ class BottomSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupGesture()
     }
 
     private func setupUI() {
@@ -37,25 +32,6 @@ class BottomSheetViewController: UIViewController {
             make.height.equalTo(400)
         }
         backgroundButton.addTarget(self, action: #selector(onDismiss), for: .touchUpInside)
-    }
-
-    private func setupGesture() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(recognizer:)))
-        container.addGestureRecognizer(panGesture)
-    }
-
-    @objc private func handlePanGesture(recognizer: UIPanGestureRecognizer) {
-        switch recognizer.state {
-        case .began:
-            print("!!! BEGAN !!!")
-        case .changed:
-            let transitionY = recognizer.translation(in: container).y
-            print("!!! CHANGED !!!, transitionY: \(transitionY)")
-        case .ended, .cancelled:
-            print("!!! ENDED | CANCEL !!!")
-        default:
-            break
-        }
     }
 
     @objc private func onDismiss() {

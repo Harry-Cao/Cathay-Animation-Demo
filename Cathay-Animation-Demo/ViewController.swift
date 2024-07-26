@@ -18,6 +18,7 @@ class ViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "\(UITableViewCell.self)")
         return tableView
     }()
+    private let bottomSheetTransition = BottomSheetTransition()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,9 +55,10 @@ extension ViewController: UITableViewDelegate {
             self.present(naviVC, animated: true)
         case .bottomSheet:
             let vc = BottomSheetViewController()
-            let naviVC = UINavigationController(rootViewController: vc)
-            naviVC.modalPresentationStyle = .custom
-            self.present(naviVC, animated: true)
+//            let naviVC = UINavigationController(rootViewController: vc)
+            vc.transitioningDelegate = bottomSheetTransition
+            vc.modalPresentationStyle = .custom
+            self.present(vc, animated: true)
         }
     }
 }
