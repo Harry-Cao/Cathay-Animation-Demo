@@ -12,7 +12,7 @@ final class BottomSheetTransition: NSObject {
     private let interactionController = BottomSheetInteractionController()
     private lazy var dimmingView: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .black.withAlphaComponent(0.5)
+        button.backgroundColor = .black.withAlphaComponent(0.1)
         button.addTarget(self, action: #selector(dismissPresentedViewController), for: .touchUpInside)
         return button
     }()

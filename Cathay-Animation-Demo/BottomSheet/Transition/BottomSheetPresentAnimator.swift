@@ -25,7 +25,7 @@ final class BottomSheetPresentAnimator: NSObject, UIViewControllerAnimatedTransi
         containerView.addSubview(toView)
         dimmingView?.alpha = 0
 
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseOut, animations: {
             toView.frame = containerView.bounds.offsetBy(dx: 0, dy: 0)
             self.dimmingView?.alpha = 1
         }, completion: { finished in

@@ -32,7 +32,7 @@ final class BottomSheetInteractionController: UIPercentDrivenInteractiveTransiti
             update(progress)
         case .ended:
             interactionInProgress = false
-            let shouldFinish: Bool = progress > 0.12 || (progress > 0 && velocityY > 500)
+            let shouldFinish: Bool = progress > 0.12 || (progress > 0 && velocityY > 800)
             if shouldFinish {
                 finish()
             } else {
