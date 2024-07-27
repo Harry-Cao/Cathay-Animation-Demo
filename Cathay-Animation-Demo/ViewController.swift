@@ -67,7 +67,8 @@ extension ViewController: UITableViewDelegate {
             sheet?.detents = [.medium()]
             self.present(naviVC, animated: true)
         case .bottomSheet_panModal:
-            print("PanModal")
+            let vc = PanModalViewController()
+            self.presentPanModal(vc)
         }
     }
 }
