@@ -31,7 +31,9 @@ class PanModalViewController: UIViewController {
 }
 
 extension PanModalViewController: PanModalPresentable {
-    var panScrollable: UIScrollView? { nil }
+    var panScrollable: UIScrollView? {
+        return nil
+    }
     var longFormHeight: PanModalHeight {
         return .contentHeight(400)
     }
@@ -40,5 +42,11 @@ extension PanModalViewController: PanModalPresentable {
     }
     var anchorModalToLongForm: Bool {
         return false
+    }
+    var isHapticFeedbackEnabled: Bool {
+        return false
+    }
+    var panModalBackgroundColor: UIColor {
+        return .black.withAlphaComponent(0.1)
     }
 }
