@@ -136,7 +136,7 @@ extension ResultViewController: UITableViewDelegate {
 }
 
 extension ResultViewController: NavigationBarTransformerDelegate {
-    func transformerTargetNavigationBar() -> UINavigationBar? {
+    var transformerTargetNavigationBar: UINavigationBar? {
         return navigationController?.navigationBar
     }
 }

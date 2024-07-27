@@ -8,7 +8,7 @@
 import UIKit
 
 protocol NavigationBarTransformerDelegate: AnyObject {
-    func transformerTargetNavigationBar() -> UINavigationBar?
+    var transformerTargetNavigationBar: UINavigationBar? { get }
 }
 
 final class NavigationBarTransformer {
@@ -16,7 +16,7 @@ final class NavigationBarTransformer {
     private var startOffset: CGFloat = 0.0
     private var endOffset: CGFloat = 100.0
     private lazy var navigationBar: UINavigationBar? = {
-        return delegate?.transformerTargetNavigationBar()
+        return delegate?.transformerTargetNavigationBar
     }()
 
     func setTransform(startOffset: CGFloat, endOffset: CGFloat) {
