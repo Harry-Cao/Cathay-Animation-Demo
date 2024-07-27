@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import PanModal
 
 class ViewController: UIViewController {
 
@@ -65,6 +66,8 @@ extension ViewController: UITableViewDelegate {
             let sheet = naviVC.sheetPresentationController
             sheet?.detents = [.medium()]
             self.present(naviVC, animated: true)
+        case .bottomSheet_panModal:
+            print("PanModal")
         }
     }
 }
@@ -74,6 +77,7 @@ extension ViewController {
         case loading
         case bottomSheet_selfMake
         case bottomSheet_system
+        case bottomSheet_panModal
 
         var title: String {
             switch self {
@@ -83,6 +87,8 @@ extension ViewController {
                 return "BottomSheet Self Make"
             case .bottomSheet_system:
                 return "BottomSheet System (iOS 15+)"
+            case .bottomSheet_panModal:
+                return "BottomSheet PanModal"
             }
         }
     }

@@ -10,5 +10,6 @@ target 'Cathay-Animation-Demo' do
 pod 'Hero', '~> 1.6.2'
 pod 'SnapKit', '~> 5.6.0'
 pod 'SDWebImage', '~> 5.16.0'
+pod 'PanModal'
 
 end
