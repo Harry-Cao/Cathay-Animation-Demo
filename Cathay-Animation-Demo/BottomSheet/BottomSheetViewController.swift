@@ -9,8 +9,6 @@ import UIKit
 import SnapKit
 
 class BottomSheetViewController: UIViewController {
-
-    private let dismissButton = UIButton()
     private(set) var container: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBackground
@@ -23,20 +21,9 @@ class BottomSheetViewController: UIViewController {
     }
 
     private func setupUI() {
-        [dismissButton, container].forEach(view.addSubview)
-        dismissButton.snp.makeConstraints { make in
-            make.leading.top.trailing.equalToSuperview()
-            make.bottom.equalTo(container.snp.top)
-        }
+        [container].forEach(view.addSubview)
         container.snp.makeConstraints { make in
-            make.leading.bottom.trailing.equalToSuperview()
-            make.height.equalTo(400)
+            make.edges.equalToSuperview()
         }
-        dismissButton.addTarget(self, action: #selector(onDismiss), for: .touchUpInside)
     }
-
-    @objc private func onDismiss() {
-        self.dismiss(animated: true)
-    }
-
 }
