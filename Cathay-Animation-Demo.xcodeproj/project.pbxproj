@@ -20,6 +20,7 @@
 		3EBD78092C4EA13D0069F583 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78082C4EA13D0069F583 /* Base */; };
 		3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* LoadingViewController.swift */; };
 		3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */; };
+		7B27F5F62C578FD6000808DF /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabItem.swift */; };
 		7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */; };
 		7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */; };
 		7B69A9A42C53A30000B0D3D6 /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */; };
@@ -47,6 +48,7 @@
 		3EBD78122C4EA5620069F583 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		73484422887A58C087246698 /* Pods-Cathay-Animation-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		7B27F5F52C578FD6000808DF /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarTransformer.swift; sourceTree = "<group>"; };
 		7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetTransition.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				3E207DA02C4FF90300BFAFE0 /* TabView.swift */,
+				7B27F5F52C578FD6000808DF /* TabItem.swift */,
 			);
 			path = TabView;
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 				7BF922F72C4FBFD6009CC71D /* LoadingModel.swift in Sources */,
 				3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */,
 				7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */,
+				7B27F5F62C578FD6000808DF /* TabItem.swift in Sources */,
 				3E91BF932C56BA690053177B /* BottomSheetConstrants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
