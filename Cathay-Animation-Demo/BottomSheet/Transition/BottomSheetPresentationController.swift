@@ -70,14 +70,17 @@ extension BottomSheetPresentationController {
         switch recognizer.state {
         case .began, .changed:
             let yDisplacement = recognizer.translation(in: presentedView).y
-            presentedView.frame.origin.y = presentedView.frame.origin.y + yDisplacement
+            let targetY = presentedView.frame.origin.y + yDisplacement
+            if targetY > BottomSheetConstrants.contentHeight {
+                presentedView.frame.origin.y = presentedView.frame.origin.y + yDisplacement
+            }
             recognizer.setTranslation(.zero, in: presentedView)
         default:
             let velocity = recognizer.velocity(in: presentedView)
             if velocity.y > 1000 {
                 presentedViewController.dismiss(animated: true)
             } else {
-                if presentedView.frame.minY > BottomSheetConstrants.contentHeight + 100 {
+                if presentedView.frame.minY > BottomSheetConstrants.contentHeight * 3 / 2 {
                     presentedViewController.dismiss(animated: true)
                 } else {
                     UIView.animate(withDuration: 0.5,
