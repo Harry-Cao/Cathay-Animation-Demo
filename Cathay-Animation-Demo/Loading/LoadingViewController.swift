@@ -1,5 +1,5 @@
 //
-//  ResultViewController.swift
+//  LoadingViewController.swift
 //  Cathay-Animation-Demo
 //
 //  Created by HarryCao on 2024/7/22.
@@ -8,15 +8,15 @@
 import UIKit
 import SnapKit
 
-class ResultViewController: UIViewController {
-    private var dataSource: [ResultModel] = {
-        var data = [ResultModel]()
+class LoadingViewController: UIViewController {
+    private var dataSource: [LoadingModel] = {
+        var data = [LoadingModel]()
         for i in 0...20 {
-            data.append(ResultModel())
+            data.append(LoadingModel())
         }
         return data
     }()
-    private var animationData = [ResultModel]()
+    private var animationData = [LoadingModel]()
     private let headerView: UIImageView = {
         let imageView = UIImageView()
         imageView.frame.size.height = UIScreen.main.bounds.height
@@ -31,7 +31,7 @@ class ResultViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ResultTableViewCell.self, forCellReuseIdentifier: "\(ResultTableViewCell.self)")
+        tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
         return tableView
     }()
     private let sectionHeader = TabView()
@@ -60,7 +60,7 @@ class ResultViewController: UIViewController {
         tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
-            dataSource = data.map{ ResultModel(num: $0) }
+            dataSource = data.map{ LoadingModel(num: $0) }
             UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = 200
                 self.headerView.layer.masksToBounds = true
@@ -78,7 +78,7 @@ class ResultViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
             guard let self = self,
                   let nextIndex = animationData.firstIndex(where: { !$0.pop }),
-                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? ResultTableViewCell else {
+                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? LoadingTableViewCell else {
                 self?.tableView.isScrollEnabled = true
                 return
             }
@@ -89,7 +89,7 @@ class ResultViewController: UIViewController {
     }
 }
 
-extension ResultViewController: UITableViewDataSource {
+extension LoadingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -104,7 +104,7 @@ extension ResultViewController: UITableViewDataSource {
             cell.backgroundColor = .yellow
             return cell
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(ResultTableViewCell.self)", for: indexPath) as! ResultTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(LoadingTableViewCell.self)", for: indexPath) as! LoadingTableViewCell
         cell.setup(finishLoading: tableView.isScrollEnabled)
         return cell
     }
@@ -123,7 +123,7 @@ extension ResultViewController: UITableViewDataSource {
     }
 }
 
-extension ResultViewController: UITableViewDelegate {
+extension LoadingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true)
@@ -135,7 +135,7 @@ extension ResultViewController: UITableViewDelegate {
     }
 }
 
-extension ResultViewController: NavigationBarTransformerDelegate {
+extension LoadingViewController: NavigationBarTransformerDelegate {
     var transformerTargetNavigationBar: UINavigationBar? {
         return navigationController?.navigationBar
     }

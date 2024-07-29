@@ -1,5 +1,5 @@
 //
-//  ResultTableViewCell.swift
+//  LoadingTableViewCell.swift
 //  Cathay-Animation-Demo
 //
 //  Created by HarryCao on 2024/7/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ResultTableViewCell: UITableViewCell {
+class LoadingTableViewCell: UITableViewCell {
     private let container: UIView = {
         let view = UIView()
         view.backgroundColor = .blue

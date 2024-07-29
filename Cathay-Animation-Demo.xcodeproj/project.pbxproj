@@ -18,14 +18,14 @@
 		3EBD78042C4EA13D0069F583 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78032C4EA13D0069F583 /* Base */; };
 		3EBD78062C4EA13D0069F583 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78052C4EA13D0069F583 /* Assets.xcassets */; };
 		3EBD78092C4EA13D0069F583 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78082C4EA13D0069F583 /* Base */; };
-		3EBD78132C4EA5620069F583 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* ResultViewController.swift */; };
-		3EBD78152C4EBEE30069F583 /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* ResultTableViewCell.swift */; };
+		3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* LoadingViewController.swift */; };
+		3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */; };
 		7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */; };
 		7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */; };
 		7B69A9A42C53A30000B0D3D6 /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */; };
 		7B69A9A52C53A30000B0D3D6 /* BottomSheetTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */; };
 		7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F22C4F53B7009CC71D /* MockNetworkHelper.swift */; };
-		7BF922F72C4FBFD6009CC71D /* ResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F62C4FBFD6009CC71D /* ResultModel.swift */; };
+		7BF922F72C4FBFD6009CC71D /* LoadingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F62C4FBFD6009CC71D /* LoadingModel.swift */; };
 		8CB75DF1CFD24A8C4587396F /* Pods_Cathay_Animation_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -44,15 +44,15 @@
 		3EBD78052C4EA13D0069F583 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EBD78082C4EA13D0069F583 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3EBD780A2C4EA13D0069F583 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3EBD78122C4EA5620069F583 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
-		3EBD78142C4EBEE30069F583 /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
+		3EBD78122C4EA5620069F583 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		73484422887A58C087246698 /* Pods-Cathay-Animation-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarTransformer.swift; sourceTree = "<group>"; };
 		7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetTransition.swift; sourceTree = "<group>"; };
 		7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
 		7BF922F22C4F53B7009CC71D /* MockNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkHelper.swift; sourceTree = "<group>"; };
-		7BF922F62C4FBFD6009CC71D /* ResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultModel.swift; sourceTree = "<group>"; };
+		7BF922F62C4FBFD6009CC71D /* LoadingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingModel.swift; sourceTree = "<group>"; };
 		9F4803B96DA22A4CC71FB079 /* Pods-Cathay-Animation-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.release.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,15 +100,24 @@
 				3EBD77FC2C4EA13D0069F583 /* AppDelegate.swift */,
 				3EBD77FE2C4EA13D0069F583 /* SceneDelegate.swift */,
 				3EBD78002C4EA13D0069F583 /* ViewController.swift */,
+				7B27F5F42C576A05000808DF /* TabView */,
 				7B69A99B2C5385AF00B0D3D6 /* BottomSheet */,
 				7BF922F42C4F80CB009CC71D /* Helper */,
-				7BF922F52C4F80D8009CC71D /* Result */,
+				7BF922F52C4F80D8009CC71D /* Loading */,
 				3EBD78022C4EA13D0069F583 /* Main.storyboard */,
 				3EBD78052C4EA13D0069F583 /* Assets.xcassets */,
 				3EBD78072C4EA13D0069F583 /* LaunchScreen.storyboard */,
 				3EBD780A2C4EA13D0069F583 /* Info.plist */,
 			);
 			path = "Cathay-Animation-Demo";
+			sourceTree = "<group>";
+		};
+		7B27F5F42C576A05000808DF /* TabView */ = {
+			isa = PBXGroup;
+			children = (
+				3E207DA02C4FF90300BFAFE0 /* TabView.swift */,
+			);
+			path = TabView;
 			sourceTree = "<group>";
 		};
 		7B69A99B2C5385AF00B0D3D6 /* BottomSheet */ = {
@@ -142,15 +151,14 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		7BF922F52C4F80D8009CC71D /* Result */ = {
+		7BF922F52C4F80D8009CC71D /* Loading */ = {
 			isa = PBXGroup;
 			children = (
-				3EBD78122C4EA5620069F583 /* ResultViewController.swift */,
-				3E207DA02C4FF90300BFAFE0 /* TabView.swift */,
-				7BF922F62C4FBFD6009CC71D /* ResultModel.swift */,
-				3EBD78142C4EBEE30069F583 /* ResultTableViewCell.swift */,
+				3EBD78122C4EA5620069F583 /* LoadingViewController.swift */,
+				7BF922F62C4FBFD6009CC71D /* LoadingModel.swift */,
+				3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */,
 			);
-			path = Result;
+			path = Loading;
 			sourceTree = "<group>";
 		};
 		B9DBCC294FF5A28571AE7710 /* Pods */ = {
@@ -279,7 +287,7 @@
 			files = (
 				7B69A9A42C53A30000B0D3D6 /* BottomSheetPresentationController.swift in Sources */,
 				3E91BF892C54CAD60053177B /* PanModalViewController.swift in Sources */,
-				3EBD78132C4EA5620069F583 /* ResultViewController.swift in Sources */,
+				3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */,
 				3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */,
 				3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */,
 				7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */,
@@ -288,8 +296,8 @@
 				7B69A9A52C53A30000B0D3D6 /* BottomSheetTransition.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
 				7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */,
-				3EBD78152C4EBEE30069F583 /* ResultTableViewCell.swift in Sources */,
-				7BF922F72C4FBFD6009CC71D /* ResultModel.swift in Sources */,
+				3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */,
+				7BF922F72C4FBFD6009CC71D /* LoadingModel.swift in Sources */,
 				3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */,
 				7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */,
 				3E91BF932C56BA690053177B /* BottomSheetConstrants.swift in Sources */,

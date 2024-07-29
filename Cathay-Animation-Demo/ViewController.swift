@@ -50,7 +50,7 @@ extension ViewController: UITableViewDelegate {
         let type = dataSource[indexPath.row]
         switch type {
         case .loading:
-            let vc = ResultViewController()
+            let vc = LoadingViewController()
             let naviVC = UINavigationController(rootViewController: vc)
             naviVC.modalPresentationStyle = .fullScreen
             self.present(naviVC, animated: true)
