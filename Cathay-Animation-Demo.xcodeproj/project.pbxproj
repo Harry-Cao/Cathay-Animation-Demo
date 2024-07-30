@@ -23,7 +23,6 @@
 		7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabModel.swift */; };
 		7B27F5F82C5886C9000808DF /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F72C5886C9000808DF /* TabItem.swift */; };
 		7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */; };
-		7B27F5FC2C58D4E6000808DF /* TabViewDelegate+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5FB2C58D4E6000808DF /* TabViewDelegate+Default.swift */; };
 		7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */; };
 		7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */; };
 		7B69A9A42C53A30000B0D3D6 /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */; };
@@ -54,7 +53,6 @@
 		7B27F5F52C578FD6000808DF /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
 		7B27F5F72C5886C9000808DF /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewDelegate.swift; sourceTree = "<group>"; };
-		7B27F5FB2C58D4E6000808DF /* TabViewDelegate+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TabViewDelegate+Default.swift"; sourceTree = "<group>"; };
 		7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarTransformer.swift; sourceTree = "<group>"; };
 		7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetTransition.swift; sourceTree = "<group>"; };
@@ -125,7 +123,6 @@
 			children = (
 				3E207DA02C4FF90300BFAFE0 /* TabView.swift */,
 				7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */,
-				7B27F5FB2C58D4E6000808DF /* TabViewDelegate+Default.swift */,
 				7B27F5F72C5886C9000808DF /* TabItem.swift */,
 				7B27F5F52C578FD6000808DF /* TabModel.swift */,
 			);
@@ -302,7 +299,6 @@
 				3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */,
 				3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */,
 				3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */,
-				7B27F5FC2C58D4E6000808DF /* TabViewDelegate+Default.swift in Sources */,
 				7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */,
 				3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */,
 				3E91BF8B2C568DC50053177B /* BottomSheetPresentationAnimator.swift in Sources */,

@@ -10,3 +10,7 @@ import Foundation
 protocol TabViewDelegate: AnyObject {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int)
 }
+
+extension TabViewDelegate {
+    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {}
+}
