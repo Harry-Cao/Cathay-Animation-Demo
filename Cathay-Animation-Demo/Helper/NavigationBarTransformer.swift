@@ -15,9 +15,6 @@ final class NavigationBarTransformer {
     weak var delegate: NavigationBarTransformerDelegate?
     private var startOffset: CGFloat = 0.0
     private var endOffset: CGFloat = 100.0
-    private lazy var navigationBar: UINavigationBar? = {
-        return delegate?.transformerTargetNavigationBar
-    }()
 
     func setTransform(startOffset: CGFloat, endOffset: CGFloat) {
         self.startOffset = startOffset
@@ -34,7 +31,7 @@ final class NavigationBarTransformer {
     }
 
     func updateNavigationBarAlpha(_ alpha: CGFloat) {
-        guard let navigationBar = navigationBar else { return }
+        guard let navigationBar = delegate?.transformerTargetNavigationBar else { return }
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.configureWithOpaqueBackground()
         navigationBarAppearance.shadowColor = .clear

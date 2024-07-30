@@ -20,8 +20,8 @@
 		3EBD78092C4EA13D0069F583 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78082C4EA13D0069F583 /* Base */; };
 		3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* LoadingViewController.swift */; };
 		3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */; };
-		7B27F5F62C578FD6000808DF /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabItem.swift */; };
-		7B27F5F82C5886C9000808DF /* TabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F72C5886C9000808DF /* TabButton.swift */; };
+		7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabModel.swift */; };
+		7B27F5F82C5886C9000808DF /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F72C5886C9000808DF /* TabItem.swift */; };
 		7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */; };
 		7B27F5FC2C58D4E6000808DF /* TabViewDelegate+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5FB2C58D4E6000808DF /* TabViewDelegate+Default.swift */; };
 		7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */; };
@@ -51,8 +51,8 @@
 		3EBD78122C4EA5620069F583 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		73484422887A58C087246698 /* Pods-Cathay-Animation-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		7B27F5F52C578FD6000808DF /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
-		7B27F5F72C5886C9000808DF /* TabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButton.swift; sourceTree = "<group>"; };
+		7B27F5F52C578FD6000808DF /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
+		7B27F5F72C5886C9000808DF /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewDelegate.swift; sourceTree = "<group>"; };
 		7B27F5FB2C58D4E6000808DF /* TabViewDelegate+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TabViewDelegate+Default.swift"; sourceTree = "<group>"; };
 		7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarTransformer.swift; sourceTree = "<group>"; };
@@ -126,8 +126,8 @@
 				3E207DA02C4FF90300BFAFE0 /* TabView.swift */,
 				7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */,
 				7B27F5FB2C58D4E6000808DF /* TabViewDelegate+Default.swift */,
-				7B27F5F52C578FD6000808DF /* TabItem.swift */,
-				7B27F5F72C5886C9000808DF /* TabButton.swift */,
+				7B27F5F72C5886C9000808DF /* TabItem.swift */,
+				7B27F5F52C578FD6000808DF /* TabModel.swift */,
 			);
 			path = TabView;
 			sourceTree = "<group>";
@@ -307,7 +307,7 @@
 				3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */,
 				3E91BF8B2C568DC50053177B /* BottomSheetPresentationAnimator.swift in Sources */,
 				7B69A9A52C53A30000B0D3D6 /* BottomSheetTransition.swift in Sources */,
-				7B27F5F82C5886C9000808DF /* TabButton.swift in Sources */,
+				7B27F5F82C5886C9000808DF /* TabItem.swift in Sources */,
 				7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
 				7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */,
@@ -315,7 +315,7 @@
 				7BF922F72C4FBFD6009CC71D /* LoadingModel.swift in Sources */,
 				3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */,
 				7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */,
-				7B27F5F62C578FD6000808DF /* TabItem.swift in Sources */,
+				7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */,
 				3E91BF932C56BA690053177B /* BottomSheetConstrants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

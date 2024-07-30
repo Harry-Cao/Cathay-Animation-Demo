@@ -47,6 +47,7 @@ class LoadingViewController: UIViewController {
     }
 
     private func setupUI() {
+        navigationBarTransformer.delegate = self
         [tableView].forEach(view.addSubview)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -54,7 +55,6 @@ class LoadingViewController: UIViewController {
     }
 
     private func requestData() {
-        navigationBarTransformer.delegate = self
         tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }

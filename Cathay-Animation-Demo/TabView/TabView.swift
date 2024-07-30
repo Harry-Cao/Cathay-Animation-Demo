@@ -13,16 +13,17 @@ class TabView: UIView {
     static let height: CGFloat = 68.0
     private(set) var currentIndex: Int = -1
     private let spacing: CGFloat = 20.0
-    private let indicatorDefaultWidth: CGFloat = 40.0
+    private let indicatorShortenWidth: CGFloat = 40.0
     private let indicatorHeight: CGFloat = 2.0
-    private var dataSource: [TabItem] = [
-        TabItem(title: "Tab1 Title"),
-        TabItem(title: "Tab2 Title"),
-        TabItem(title: "Tab3 Title"),
-        TabItem(title: "Tab4 Title"),
-        TabItem(title: "Tab5 Title"),
-        TabItem(title: "Tab6 Title"),
-        TabItem(title: "Tab7 Title"),
+    private let animationDuration: TimeInterval = 0.5
+    private var dataSource: [TabModel] = [
+        TabModel(title: "Tab1 Title"),
+        TabModel(title: "Tab2 Title"),
+        TabModel(title: "Tab3 Title"),
+        TabModel(title: "Tab4 Title"),
+        TabModel(title: "Tab5 Title"),
+        TabModel(title: "Tab6 Title"),
+        TabModel(title: "Tab7 Title"),
     ]
     private let tabScrollView: UIScrollView = {
         let view = UIScrollView()
@@ -39,11 +40,8 @@ class TabView: UIView {
     private lazy var indicator: UIView = {
         let view = UIView()
         view.backgroundColor = .black
-        view.layer.cornerRadius = 2
+        view.layer.cornerRadius = indicatorHeight / 2
         return view
-    }()
-    private lazy var animationDuration: TimeInterval = {
-        return delegate?.animationDuration ?? 0.3
     }()
 
     override init(frame: CGRect) {
@@ -70,7 +68,7 @@ class TabView: UIView {
             make.height.equalTo(TabView.height)
             make.width.greaterThanOrEqualTo(tabScrollView).offset(-2*spacing)
         }
-        indicator.frame = CGRect(x: 0, y: TabView.height - indicatorHeight, width: indicatorDefaultWidth, height: indicatorHeight)
+        indicator.frame = CGRect(x: 0, y: TabView.height - indicatorHeight, width: 0, height: indicatorHeight)
     }
 
     func refresh() {
@@ -78,14 +76,11 @@ class TabView: UIView {
             tabStackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
         }
-        dataSource.enumerated().forEach { (index, item) in
-            let label = UILabel()
-            label.text = item.title
-            label.textAlignment = .center
-            let button = TabButton(view: label) { [weak self] in
+        dataSource.enumerated().forEach { (index, model) in
+            let button = TabItem { [weak self] in
                 self?.select(index: index)
             }
-            button.backgroundColor = .green
+            button.setup(model: model)
             tabStackView.addArrangedSubview(button)
             button.snp.makeConstraints { make in
                 make.height.equalToSuperview()
@@ -96,9 +91,17 @@ class TabView: UIView {
     func select(index: Int) {
         guard (0...tabStackView.arrangedSubviews.count-1).contains(index) else { return }
         delegate?.tabView(self, didSelect: index, fromIndex: currentIndex)
+        setHighlight(index: index)
         tabViewAnimateTo(index: index)
         indicatorAnimateTo(index: index)
         currentIndex = index
+    }
+
+    private func setHighlight(index: Int) {
+        tabStackView.arrangedSubviews.enumerated().forEach { (itemIndex, item) in
+            guard let buttonItem = item as? TabItem else { return }
+            buttonItem.setHighlight(itemIndex == index)
+        }
     }
 }
 
@@ -128,9 +131,10 @@ extension TabView {
         let toItemRect = toItem.convert(toItem.bounds, to: tabScrollView)
 
         if currentIndex == -1 {
-            indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorDefaultWidth) / 2
-            indicator.frame.size.width = indicatorDefaultWidth
-            UIView.animate(withDuration: animationDuration) { [self] in
+            indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorShortenWidth) / 2
+            indicator.frame.size.width = indicatorShortenWidth
+            UIView.animate(withDuration: animationDuration / 3, delay: 0, options: .curveEaseOut) { [weak self] in
+                guard let self = self else { return }
                 indicator.frame.origin.x = toItemRect.minX
                 indicator.frame.size.width = toItemRect.width
             }
@@ -138,17 +142,20 @@ extension TabView {
         }
 
         guard (0...tabStackView.arrangedSubviews.count-1).contains(currentIndex) else { return }
-        let currentItem = tabStackView.arrangedSubviews[currentIndex]
-        let currentItemRect = currentItem.convert(currentItem.bounds, to: tabScrollView)
+        let fromItem = tabStackView.arrangedSubviews[currentIndex]
+        let fromItemRect = fromItem.convert(fromItem.bounds, to: tabScrollView)
 
-        let shortenAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .linear) { [self] in
-            indicator.frame.origin.x = currentItemRect.minX + (currentItemRect.width - indicatorDefaultWidth) / 2
-            indicator.frame.size.width = indicatorDefaultWidth
+        let shortenAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .easeIn) { [weak self] in
+            guard let self = self else { return }
+            indicator.frame.origin.x = fromItemRect.minX + (fromItemRect.width - indicatorShortenWidth) / 2
+            indicator.frame.size.width = indicatorShortenWidth
         }
-        let moveAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .linear) { [self] in
-            indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorDefaultWidth) / 2
+        let moveAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .linear) { [weak self] in
+            guard let self = self else { return }
+            indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorShortenWidth) / 2
         }
-        let elongateAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .linear) { [self] in
+        let elongateAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .easeOut) { [weak self] in
+            guard let self = self else { return }
             indicator.frame.origin.x = toItemRect.minX
             indicator.frame.size.width = toItemRect.width
         }
