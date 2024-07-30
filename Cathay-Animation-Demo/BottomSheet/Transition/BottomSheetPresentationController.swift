@@ -71,8 +71,9 @@ extension BottomSheetPresentationController {
         case .began, .changed:
             let yDisplacement = recognizer.translation(in: presentedView).y
             let targetY = presentedView.frame.origin.y + yDisplacement
-            if targetY > BottomSheetConstrants.contentHeight {
-                presentedView.frame.origin.y = presentedView.frame.origin.y + yDisplacement
+            // Only support panning down
+            if targetY > BottomSheetConstrants.expandY {
+                adjust(toYPosition: presentedView.frame.origin.y + yDisplacement)
             }
             recognizer.setTranslation(.zero, in: presentedView)
         default:
@@ -80,7 +81,7 @@ extension BottomSheetPresentationController {
             if velocity.y > 1000 {
                 presentedViewController.dismiss(animated: true)
             } else {
-                if presentedView.frame.minY > BottomSheetConstrants.contentHeight * 3 / 2 {
+                if presentedView.frame.minY > BottomSheetConstrants.expandY * 3 / 2 {
                     presentedViewController.dismiss(animated: true)
                 } else {
                     UIView.animate(withDuration: 0.5,
@@ -89,10 +90,16 @@ extension BottomSheetPresentationController {
                                    initialSpringVelocity: 0,
                                    options: [.allowUserInteraction, .beginFromCurrentState],
                                    animations: {
-                        self.presentedView.frame.origin.y = BottomSheetConstrants.contentHeight
+                        self.presentedView.frame.origin.y = BottomSheetConstrants.expandY
                     })
                 }
             }
         }
+    }
+
+    private func adjust(toYPosition yPos: CGFloat) {
+        presentedView.frame.origin.y = yPos
+        let yDisplacement = yPos - BottomSheetConstrants.expandY
+        dimmingView.alpha = 1 - (yDisplacement / presentedView.frame.height)
     }
 }

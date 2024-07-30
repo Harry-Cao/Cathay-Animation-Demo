@@ -41,7 +41,7 @@ extension BottomSheetPresentationAnimator {
                        initialSpringVelocity: 0,
                        options: [.allowUserInteraction, .beginFromCurrentState],
                        animations: {
-            toView.frame.origin.y = BottomSheetConstrants.contentHeight
+            toView.frame.origin.y = BottomSheetConstrants.expandY
         }, completion: { finished in
             transitionContext.completeTransition(finished)
         })

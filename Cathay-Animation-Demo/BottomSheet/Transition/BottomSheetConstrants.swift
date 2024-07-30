@@ -8,5 +8,5 @@
 import Foundation
 
 struct BottomSheetConstrants {
-    static let contentHeight: CGFloat = 400
+    static let expandY: CGFloat = 400
 }
