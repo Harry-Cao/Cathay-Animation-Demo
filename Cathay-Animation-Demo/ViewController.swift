@@ -83,7 +83,7 @@ extension ViewController {
         var title: String {
             switch self {
             case .loading:
-                return "Loadding"
+                return "Loading"
             case .bottomSheet_selfMake:
                 return "BottomSheet Self Make"
             case .bottomSheet_system:

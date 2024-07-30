@@ -13,7 +13,7 @@ class LoadingTableViewCell: UITableViewCell {
         view.backgroundColor = .blue
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 12
-        view.frame.size = CGSize(width: UIScreen.main.bounds.width - 40, height: 60)
+        view.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
         return view
     }()
 
@@ -32,16 +32,16 @@ class LoadingTableViewCell: UITableViewCell {
 
     func setup(finishLoading: Bool) {
         if finishLoading {
-            container.frame.origin = CGPoint(x: 20, y: 20)
+            container.alpha = 1
         } else {
-            container.frame.origin = CGPoint(x: UIScreen.main.bounds.width, y: 20)
+            container.alpha = 0
         }
     }
 
     func fadeIn() {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            container.frame.origin = CGPoint(x: 20, y: 20)
+            container.alpha = 1
         }
     }
 }

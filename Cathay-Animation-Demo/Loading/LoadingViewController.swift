@@ -9,13 +9,7 @@ import UIKit
 import SnapKit
 
 class LoadingViewController: UIViewController {
-    private var dataSource: [LoadingModel] = {
-        var data = [LoadingModel]()
-        for i in 0...20 {
-            data.append(LoadingModel())
-        }
-        return data
-    }()
+    private var dataSource: [LoadingModel] = []
     private var animationData = [LoadingModel]()
     private let headerView: UIImageView = {
         let imageView = UIImageView()
@@ -34,7 +28,12 @@ class LoadingViewController: UIViewController {
         tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
         return tableView
     }()
-    private let sectionHeader = TabView()
+    private lazy var sectionHeader: TabView = {
+        let tabView = TabView()
+        tabView.alpha = 0
+        tabView.delegate = self
+        return tabView
+    }()
     private let navigationBarTransformer: NavigationBarTransformer = {
         let transformer = NavigationBarTransformer()
         transformer.setTransform(startOffset: 0.0, endOffset: 100.0)
@@ -48,7 +47,6 @@ class LoadingViewController: UIViewController {
     }
 
     private func setupUI() {
-        sectionHeader.alpha = 0
         [tableView].forEach(view.addSubview)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -61,14 +59,15 @@ class LoadingViewController: UIViewController {
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
             dataSource = data.map{ LoadingModel(num: $0) }
+            self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
                 self.headerView.frame.size.height = 200
                 self.headerView.layer.masksToBounds = true
                 self.headerView.layer.cornerRadius = 40
                 self.headerView.layer.maskedCorners = [.layerMinXMaxYCorner]
             } completion: { _ in
-                self.tableView.reloadData()
                 self.sectionHeader.alpha = 1
+                self.sectionHeader.select(index: 0)
                 self.fadeInNext()
             }
         }
@@ -118,6 +117,7 @@ extension LoadingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard !tableView.isScrollEnabled else { return }
         let data = dataSource[indexPath.row]
         animationData.append(data)
     }
@@ -138,5 +138,11 @@ extension LoadingViewController: UITableViewDelegate {
 extension LoadingViewController: NavigationBarTransformerDelegate {
     var transformerTargetNavigationBar: UINavigationBar? {
         return navigationController?.navigationBar
+    }
+}
+
+extension LoadingViewController: TabViewDelegate {
+    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
+        print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
     }
 }
