@@ -130,14 +130,9 @@ extension BottomSheetPresentationController {
     }
 
     func snap(toYPosition yPos: CGFloat) {
-        UIView.animate(withDuration: 0.5,
-                       delay: 0,
-                       usingSpringWithDamping: 0.8,
-                       initialSpringVelocity: 0,
-                       options: [.allowUserInteraction, .beginFromCurrentState],
-                       animations: { [weak self] in
+        BottomSheetAnimator.animate { [weak self] in
             self?.adjust(toYPosition: yPos)
-        })
+        }
     }
 
     private func adjust(toYPosition yPos: CGFloat) {

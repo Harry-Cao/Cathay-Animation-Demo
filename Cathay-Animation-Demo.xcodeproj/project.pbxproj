@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E07D3122C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift */; };
+		3E07D3192C5AA8E6009B346C /* BottomSheetAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E07D3182C5AA8E6009B346C /* BottomSheetAnimator.swift */; };
 		3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E207DA02C4FF90300BFAFE0 /* TabView.swift */; };
 		3E91BF892C54CAD60053177B /* PanModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91BF882C54CAD60053177B /* PanModalViewController.swift */; };
 		3E91BF8B2C568DC50053177B /* BottomSheetPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91BF8A2C568DC50053177B /* BottomSheetPresentationAnimator.swift */; };
@@ -36,6 +37,7 @@
 /* Begin PBXFileReference section */
 		0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cathay_Animation_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E07D3122C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BottomSheetPresentable+Layout.swift"; sourceTree = "<group>"; };
+		3E07D3182C5AA8E6009B346C /* BottomSheetAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetAnimator.swift; sourceTree = "<group>"; };
 		3E207DA02C4FF90300BFAFE0 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		3E91BF882C54CAD60053177B /* PanModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanModalViewController.swift; sourceTree = "<group>"; };
 		3E91BF8A2C568DC50053177B /* BottomSheetPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationAnimator.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				3E91BF8A2C568DC50053177B /* BottomSheetPresentationAnimator.swift */,
+				3E07D3182C5AA8E6009B346C /* BottomSheetAnimator.swift */,
 			);
 			path = Animator;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */,
 				7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */,
 				7BA9D2612C59D8A200BC9612 /* BottomSheetPresentable.swift in Sources */,
+				3E07D3192C5AA8E6009B346C /* BottomSheetAnimator.swift in Sources */,
 				3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */,
 				3E91BF8B2C568DC50053177B /* BottomSheetPresentationAnimator.swift in Sources */,
 				7B69A9A52C53A30000B0D3D6 /* BottomSheetTransition.swift in Sources */,

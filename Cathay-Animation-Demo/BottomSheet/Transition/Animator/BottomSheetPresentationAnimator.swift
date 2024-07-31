@@ -48,16 +48,12 @@ extension BottomSheetPresentationAnimator {
         panView.frame = transitionContext.finalFrame(for: toVC)
         panView.frame.origin.y = transitionContext.containerView.frame.height
 
-        UIView.animate(withDuration: transitionDuration(using: transitionContext),
-                       delay: 0,
-                       usingSpringWithDamping: 0.8,
-                       initialSpringVelocity: 0,
-                       options: [.allowUserInteraction, .beginFromCurrentState],
-                       animations: {
+        BottomSheetAnimator.animate {
             panView.frame.origin.y = yAnchor
-        }, completion: { finished in
+        } completion: { finished in
             transitionContext.completeTransition(finished)
-        })
+        }
+
     }
 
     private func animateDismissal(transitionContext: UIViewControllerContextTransitioning) {
@@ -66,16 +62,12 @@ extension BottomSheetPresentationAnimator {
         toVC.beginAppearanceTransition(true, animated: true)
         let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC.view
 
-        UIView.animate(withDuration: transitionDuration(using: transitionContext),
-                       delay: 0,
-                       usingSpringWithDamping: 0.8,
-                       initialSpringVelocity: 0,
-                       options: [.allowUserInteraction, .beginFromCurrentState],
-                       animations: {
+        BottomSheetAnimator.animate {
             panView.frame.origin.y = transitionContext.containerView.frame.height
-        }, completion: { finished in
+        } completion: { finished in
             transitionContext.completeTransition(finished)
-        })
+        }
+
     }
 }
 
