@@ -12,6 +12,17 @@ class BottomSheetViewController: UIViewController {
     private(set) var container: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBackground
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 12
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        return view
+    }()
+    private lazy var tableView: UITableView = {
+        let view = UITableView()
+        view.dataSource = self
+        view.delegate = self
+        view.contentInsetAdjustmentBehavior = .never
+        view.register(UITableViewCell.self, forCellReuseIdentifier: "\(UITableViewCell.self)")
         return view
     }()
 
@@ -21,9 +32,30 @@ class BottomSheetViewController: UIViewController {
     }
 
     private func setupUI() {
-        [container].forEach(view.addSubview)
+        [container, tableView].forEach(view.addSubview)
         container.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        tableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+}
+
+extension BottomSheetViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 100
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(UITableViewCell.self)", for: indexPath)
+        cell.textLabel?.text = "title"
+        return cell
+    }
+}
+
+// MARK: - BottomSheetPresentable
+extension BottomSheetViewController: BottomSheetPresentable {
+    var panScrollable: UIScrollView? {
+        return tableView
     }
 }

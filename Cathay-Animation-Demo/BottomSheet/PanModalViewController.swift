@@ -16,23 +16,45 @@ class PanModalViewController: UIViewController {
         view.backgroundColor = .systemBackground
         return view
     }()
+    private lazy var tableView: UITableView = {
+        let view = UITableView()
+        view.dataSource = self
+        view.delegate = self
+        view.register(UITableViewCell.self, forCellReuseIdentifier: "\(UITableViewCell.self)")
+        return view
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
 
     private func setupUI() {
-        [container].forEach(view.addSubview)
+        [container, tableView].forEach(view.addSubview)
         container.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
 
 }
 
+extension PanModalViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 100
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(UITableViewCell.self)", for: indexPath)
+        cell.textLabel?.text = "title"
+        return cell
+    }
+}
+
 extension PanModalViewController: PanModalPresentable {
     var panScrollable: UIScrollView? {
-        return nil
+        return tableView
     }
     var longFormHeight: PanModalHeight {
         return .contentHeight(400)
@@ -41,7 +63,7 @@ extension PanModalViewController: PanModalPresentable {
         return false
     }
     var anchorModalToLongForm: Bool {
-        return false
+        return true
     }
     var isHapticFeedbackEnabled: Bool {
         return false
