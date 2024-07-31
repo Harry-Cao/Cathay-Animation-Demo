@@ -110,8 +110,8 @@ extension TabView {
     private func tabViewAnimateTo(index: Int) {
         let item = tabStackView.arrangedSubviews[index]
         let itemRect = item.convert(item.bounds, to: self)
-        let horizontalOffset = horizontalOffsetToMiddle(rect: itemRect, to: self)
-        let targetOffsetX = tabScrollView.contentOffset.x + horizontalOffset
+        let horizontalOffsetX = horizontalOffsetToMiddle(rect: itemRect, to: self)
+        let targetOffsetX = tabScrollView.contentOffset.x + horizontalOffsetX
         let contentOffsetX = max(0, min(targetOffsetX, tabScrollView.contentSize.width - self.frame.width))
 
         UIView.animate(withDuration: animationDuration,
