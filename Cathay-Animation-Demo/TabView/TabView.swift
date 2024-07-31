@@ -116,7 +116,7 @@ extension TabView {
 
         UIView.animate(withDuration: animationDuration,
                        delay: 0,
-                       options: [.allowUserInteraction, .beginFromCurrentState]) { [self] in
+                       options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseInOut]) { [self] in
             tabScrollView.contentOffset.x = contentOffsetX
         }
     }
