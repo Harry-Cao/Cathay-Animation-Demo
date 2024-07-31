@@ -26,14 +26,27 @@ final class BottomSheetPresentationAnimator: NSObject, UIViewControllerAnimatedT
             animateDismissal(transitionContext: transitionContext)
         }
     }
+
+    private func panModalLayoutType(from context: UIViewControllerContextTransitioning) -> BottomSheetPresentable.LayoutType? {
+        switch transitionStyle {
+        case .presentation:
+            return context.viewController(forKey: .to) as? BottomSheetPresentable.LayoutType
+        case .dismissal:
+            return context.viewController(forKey: .from) as? BottomSheetPresentable.LayoutType
+        }
+    }
 }
 
 extension BottomSheetPresentationAnimator {
     private func animatePresentation(transitionContext: UIViewControllerContextTransitioning) {
-        guard let toView = transitionContext.view(forKey: .to) else { return }
-        let containerView = transitionContext.containerView
-        toView.frame = containerView.bounds.offsetBy(dx: 0, dy: containerView.bounds.height)
-        containerView.addSubview(toView)
+        guard let toVC = transitionContext.viewController(forKey: .to),
+              let fromVC = transitionContext.viewController(forKey: .from) else { return }
+        fromVC.beginAppearanceTransition(false, animated: true)
+        let presentable = panModalLayoutType(from: transitionContext)
+        let yAnchor: CGFloat = presentable?.yAnchor ?? 0.0
+        let panView: UIView = transitionContext.containerView.panContainerView ?? toVC.view
+        panView.frame = transitionContext.finalFrame(for: toVC)
+        panView.frame.origin.y = transitionContext.containerView.frame.height
 
         UIView.animate(withDuration: transitionDuration(using: transitionContext),
                        delay: 0,
@@ -41,15 +54,17 @@ extension BottomSheetPresentationAnimator {
                        initialSpringVelocity: 0,
                        options: [.allowUserInteraction, .beginFromCurrentState],
                        animations: {
-            toView.frame.origin.y = BottomSheetConstrants.expandY
+            panView.frame.origin.y = yAnchor
         }, completion: { finished in
             transitionContext.completeTransition(finished)
         })
     }
 
     private func animateDismissal(transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromView = transitionContext.view(forKey: .from) else { return }
-        let containerView = transitionContext.containerView
+        guard let toVC = transitionContext.viewController(forKey: .to),
+                  let fromVC = transitionContext.viewController(forKey: .from) else { return }
+        toVC.beginAppearanceTransition(true, animated: true)
+        let panView: UIView = transitionContext.containerView.panContainerView ?? fromVC.view
 
         UIView.animate(withDuration: transitionDuration(using: transitionContext),
                        delay: 0,
@@ -57,7 +72,7 @@ extension BottomSheetPresentationAnimator {
                        initialSpringVelocity: 0,
                        options: [.allowUserInteraction, .beginFromCurrentState],
                        animations: {
-            fromView.frame.origin.y = containerView.frame.height
+            panView.frame.origin.y = transitionContext.containerView.frame.height
         }, completion: { finished in
             transitionContext.completeTransition(finished)
         })

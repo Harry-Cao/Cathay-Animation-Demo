@@ -56,6 +56,9 @@ extension BottomSheetViewController: UITableViewDataSource, UITableViewDelegate 
 
 // MARK: - BottomSheetPresentable
 extension BottomSheetViewController: BottomSheetPresentable {
+    var contentHeight: CGFloat {
+        return 400
+    }
     var panScrollable: UIScrollView? {
         return tableView
     }

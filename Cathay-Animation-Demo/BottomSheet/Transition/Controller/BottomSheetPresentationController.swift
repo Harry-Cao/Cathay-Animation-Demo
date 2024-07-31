@@ -8,7 +8,7 @@
 import UIKit
 
 final class BottomSheetPresentationController: UIPresentationController {
-    private var isPresentedViewAnimating = false
+    private var yAnchor: CGFloat = 0.0
     private var scrollObserver: NSKeyValueObservation?
     private var scrollViewYOffset: CGFloat = 0.0
     private lazy var dimmingView: UIButton = {
@@ -33,15 +33,25 @@ final class BottomSheetPresentationController: UIPresentationController {
         return presentedViewController as? BottomSheetPresentable
     }
     private var isPresentedViewAnchored: Bool {
-        if !isPresentedViewAnimating
-            && presentedView.frame.minY.rounded() <= BottomSheetConstrants.expandY.rounded() {
-            return true
-        }
-        return false
+        return presentedView.frame.minY.rounded() <= yAnchor.rounded()
+    }
+
+    deinit {
+        scrollObserver?.invalidate()
     }
 
     override var presentedView: UIView {
         return panContainerView
+    }
+
+    override func containerViewWillLayoutSubviews() {
+        super.containerViewWillLayoutSubviews()
+        configureViewLayout()
+    }
+
+    private func configureViewLayout() {
+        guard let layoutPresentable = presentedViewController as? BottomSheetPresentable.LayoutType else { return }
+        yAnchor = layoutPresentable.yAnchor
     }
 
     override func presentationTransitionWillBegin() {
@@ -92,15 +102,15 @@ extension BottomSheetPresentationController {
         }
         switch recognizer.state {
         case .began, .changed:
-            var yDisplacement = recognizer.translation(in: presentedView).y
+            let yDisplacement = recognizer.translation(in: presentedView).y
             adjust(toYPosition: presentedView.frame.origin.y + yDisplacement)
             recognizer.setTranslation(.zero, in: presentedView)
         default:
             let velocity = recognizer.velocity(in: presentedView)
-            if velocity.y > 1000 || presentedView.frame.minY > BottomSheetConstrants.expandY * 3 / 2 {
+            if velocity.y > 1000 || presentedView.frame.minY > yAnchor * 3 / 2 {
                 presentedViewController.dismiss(animated: true)
             } else {
-                snap(toYPosition: BottomSheetConstrants.expandY)
+                snap(toYPosition: yAnchor)
             }
         }
     }
@@ -127,16 +137,13 @@ extension BottomSheetPresentationController {
                        options: [.allowUserInteraction, .beginFromCurrentState],
                        animations: { [weak self] in
             self?.adjust(toYPosition: yPos)
-            self?.isPresentedViewAnimating = true
-        }) { [weak self] complete in
-            self?.isPresentedViewAnimating = !complete
-        }
+        })
     }
 
     private func adjust(toYPosition yPos: CGFloat) {
-        presentedView.frame.origin.y = max(yPos, BottomSheetConstrants.expandY)
-        let yDisplacement = yPos - BottomSheetConstrants.expandY
-        dimmingView.alpha = 1 - (yDisplacement / presentedView.frame.height)
+        presentedView.frame.origin.y = max(yPos, yAnchor)
+        let yDisplacement = presentedView.frame.origin.y - yAnchor
+        dimmingView.alpha = 1 - yDisplacement / yAnchor
     }
 }
 
@@ -145,7 +152,7 @@ extension BottomSheetPresentationController: UIGestureRecognizerDelegate {
         return false
     }
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        return otherGestureRecognizer.view == presentable?.panScrollable
     }
 }
 
@@ -154,7 +161,7 @@ extension BottomSheetPresentationController {
     func observe(scrollView: UIScrollView?) {
         scrollObserver?.invalidate()
         scrollObserver = scrollView?.observe(\.contentOffset, options: .old) { [weak self] scrollView, change in
-            guard self?.containerView != nil else { return }
+            guard let _ = self?.containerView else { return }
             self?.didPanOnScrollView(scrollView, change: change)
         }
     }
@@ -164,7 +171,7 @@ extension BottomSheetPresentationController {
               !presentedViewController.isBeingPresented else { return }
         if scrollView.isScrolling && !isPresentedViewAnchored {
             haltScrolling(scrollView)
-        } else if scrollView.contentOffset.y <= 0 {
+        } else if scrollView.contentOffset.y <= 0 && presentable?.topBounceAlign == true {
             handleScrollViewTopBounce(scrollView: scrollView, change: change)
         } else {
             trackScrolling(scrollView)
@@ -186,10 +193,10 @@ extension BottomSheetPresentationController {
         let presentedSize = containerView?.frame.size ?? .zero
         presentedView.bounds.size = CGSize(width: presentedSize.width, height: presentedSize.height + yOffset)
         if oldYValue > yOffset {
-            presentedView.frame.origin.y = BottomSheetConstrants.expandY - yOffset
+            presentedView.frame.origin.y = yAnchor - yOffset
         } else {
             scrollViewYOffset = 0
-            snap(toYPosition: BottomSheetConstrants.expandY)
+            snap(toYPosition: yAnchor)
         }
     }
 }

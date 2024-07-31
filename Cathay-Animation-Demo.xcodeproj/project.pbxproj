@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E07D3122C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift */; };
 		3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E207DA02C4FF90300BFAFE0 /* TabView.swift */; };
 		3E91BF892C54CAD60053177B /* PanModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91BF882C54CAD60053177B /* PanModalViewController.swift */; };
 		3E91BF8B2C568DC50053177B /* BottomSheetPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91BF8A2C568DC50053177B /* BottomSheetPresentationAnimator.swift */; };
 		3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91BF8E2C56A3FB0053177B /* PanContainerView.swift */; };
-		3E91BF932C56BA690053177B /* BottomSheetConstrants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E91BF922C56BA690053177B /* BottomSheetConstrants.swift */; };
 		3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD77FC2C4EA13D0069F583 /* AppDelegate.swift */; };
 		3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD77FE2C4EA13D0069F583 /* SceneDelegate.swift */; };
 		3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78002C4EA13D0069F583 /* ViewController.swift */; };
@@ -35,11 +35,11 @@
 
 /* Begin PBXFileReference section */
 		0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cathay_Animation_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E07D3122C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BottomSheetPresentable+Layout.swift"; sourceTree = "<group>"; };
 		3E207DA02C4FF90300BFAFE0 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		3E91BF882C54CAD60053177B /* PanModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanModalViewController.swift; sourceTree = "<group>"; };
 		3E91BF8A2C568DC50053177B /* BottomSheetPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationAnimator.swift; sourceTree = "<group>"; };
 		3E91BF8E2C56A3FB0053177B /* PanContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanContainerView.swift; sourceTree = "<group>"; };
-		3E91BF922C56BA690053177B /* BottomSheetConstrants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetConstrants.swift; sourceTree = "<group>"; };
 		3EBD77F92C4EA13D0069F583 /* Cathay-Animation-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cathay-Animation-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBD77FC2C4EA13D0069F583 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3EBD77FE2C4EA13D0069F583 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +82,39 @@
 				0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3E07D3142C5AA3C1009B346C /* Presentable */ = {
+			isa = PBXGroup;
+			children = (
+				7BA9D2602C59D8A200BC9612 /* BottomSheetPresentable.swift */,
+				3E07D3122C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift */,
+			);
+			path = Presentable;
+			sourceTree = "<group>";
+		};
+		3E07D3152C5AA3CF009B346C /* Animator */ = {
+			isa = PBXGroup;
+			children = (
+				3E91BF8A2C568DC50053177B /* BottomSheetPresentationAnimator.swift */,
+			);
+			path = Animator;
+			sourceTree = "<group>";
+		};
+		3E07D3162C5AA3D5009B346C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3E91BF8E2C56A3FB0053177B /* PanContainerView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		3E07D3172C5AA3DC009B346C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		3EBD77F02C4EA13D0069F583 = {
@@ -145,11 +178,10 @@
 			isa = PBXGroup;
 			children = (
 				7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */,
-				3E91BF922C56BA690053177B /* BottomSheetConstrants.swift */,
-				7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */,
-				7BA9D2602C59D8A200BC9612 /* BottomSheetPresentable.swift */,
-				3E91BF8A2C568DC50053177B /* BottomSheetPresentationAnimator.swift */,
-				3E91BF8E2C56A3FB0053177B /* PanContainerView.swift */,
+				3E07D3172C5AA3DC009B346C /* Controller */,
+				3E07D3142C5AA3C1009B346C /* Presentable */,
+				3E07D3152C5AA3CF009B346C /* Animator */,
+				3E07D3162C5AA3D5009B346C /* View */,
 			);
 			path = Transition;
 			sourceTree = "<group>";
@@ -311,12 +343,12 @@
 				7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
 				7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */,
+				3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */,
 				3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */,
 				7BF922F72C4FBFD6009CC71D /* LoadingModel.swift in Sources */,
 				3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */,
 				7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */,
 				7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */,
-				3E91BF932C56BA690053177B /* BottomSheetConstrants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
