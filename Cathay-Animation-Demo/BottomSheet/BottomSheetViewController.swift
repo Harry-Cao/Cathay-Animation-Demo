@@ -21,6 +21,7 @@ class BottomSheetViewController: UIViewController {
         let view = UITableView()
         view.dataSource = self
         view.delegate = self
+        view.showsVerticalScrollIndicator = false
         view.contentInsetAdjustmentBehavior = .never
         view.register(UITableViewCell.self, forCellReuseIdentifier: "\(UITableViewCell.self)")
         return view
