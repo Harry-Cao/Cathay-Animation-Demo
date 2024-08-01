@@ -23,7 +23,7 @@ class LoadingViewController: UIViewController {
         tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
         return tableView
     }()
-    private let headerView: LoadingHeaderView = LoadingHeaderView(frame: .zero)
+    private let headerView = LoadingHeaderView()
     private let navigationBarTransformer: NavigationBarTransformer = {
         let transformer = NavigationBarTransformer()
         transformer.setTransform(startOffset: 0.0, endOffset: 100.0)
@@ -36,23 +36,31 @@ class LoadingViewController: UIViewController {
         requestData()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     private func setupUI() {
         navigationBarTransformer.delegate = self
         [tableView, headerView].forEach(view.addSubview)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        headerView.setState(.loading)
+        headerView.snp.makeConstraints { make in
+            make.leading.top.trailing.equalToSuperview()
+        }
     }
 
     private func requestData() {
+        headerView.setState(.loading)
         tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
             dataSource = data.map{ LoadingModel(num: $0) }
             self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
-                self.headerView.setState(.sticky(process: 0))
+                self.headerView.setState(.normal)
             } completion: { _ in
                 self.headerView.dateBar.select(index: 0)
                 self.fadeInNext()
@@ -110,12 +118,18 @@ extension LoadingViewController: UITableViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         navigationBarTransformer.trackScrollView(scrollView)
-        tableView.contentInsetAdjustmentBehavior = scrollView.contentOffset.y > 50 ? .always : .never
+        headerView.trackScrollView(scrollView)
     }
 }
 
 extension LoadingViewController: NavigationBarTransformerDelegate {
     var transformerTargetNavigationBar: UINavigationBar? {
         return navigationController?.navigationBar
+    }
+    var transformerFactor: CGFloat {
+        return 1 / 3
+    }
+    func transformer(_ transformer: NavigationBarTransformer, displaying process: CGFloat) {
+        headerView.animationView.updateDismissProcess(process)
     }
 }

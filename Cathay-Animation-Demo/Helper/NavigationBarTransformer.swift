@@ -9,6 +9,13 @@ import UIKit
 
 protocol NavigationBarTransformerDelegate: AnyObject {
     var transformerTargetNavigationBar: UINavigationBar? { get }
+    var transformerFactor: CGFloat { get }
+    func transformer(_ transformer: NavigationBarTransformer, displaying process: CGFloat)
+}
+
+extension NavigationBarTransformerDelegate {
+    var transformerFactor: CGFloat { 1.0 }
+    func transformer(_ transformer: NavigationBarTransformer, displaying process: CGFloat) {}
 }
 
 final class NavigationBarTransformer {
@@ -23,11 +30,13 @@ final class NavigationBarTransformer {
     }
 
     func trackScrollView(_ scrollView: UIScrollView) {
-        var alpha: CGFloat = 0.0
+        var process: CGFloat = 0.0
+        let transformFactor = delegate?.transformerFactor ?? 1.0
         if scrollView.contentOffset.y > startOffset {
-            alpha = (scrollView.contentOffset.y - startOffset) / (endOffset - startOffset)
+            process = (scrollView.contentOffset.y - startOffset) * transformFactor / (endOffset - startOffset)
         }
-        updateNavigationBarAlpha(alpha)
+//        updateNavigationBarAlpha(process)
+        delegate?.transformer(self, displaying: process)
     }
 
     func updateNavigationBarAlpha(_ alpha: CGFloat) {

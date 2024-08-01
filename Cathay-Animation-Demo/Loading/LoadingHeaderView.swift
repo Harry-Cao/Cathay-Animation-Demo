@@ -9,12 +9,8 @@ import UIKit
 import SnapKit
 
 class LoadingHeaderView: UIView {
-    static let height: CGFloat = 200 + TabView.height
-    private let animationView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = .red
-        return imageView
-    }()
+    static let height: CGFloat = LoadingAnimationView.height + TabView.height
+    let animationView = LoadingAnimationView()
     lazy var dateBar: TabView = {
         let tabView = TabView()
         tabView.delegate = self
@@ -31,8 +27,14 @@ class LoadingHeaderView: UIView {
     }
 
     private func setupUI() {
+        backgroundColor = .systemBackground
         [animationView, dateBar].forEach(addSubview)
+        animationView.snp.makeConstraints { make in
+            make.leading.top.trailing.equalToSuperview()
+            make.height.equalTo(UIScreen.main.bounds.height)
+        }
         dateBar.snp.makeConstraints { make in
+            make.top.equalTo(animationView.snp.bottom)
             make.leading.bottom.trailing.equalToSuperview()
             make.height.equalTo(TabView.height)
         }
@@ -41,12 +43,32 @@ class LoadingHeaderView: UIView {
     func setState(_ state: HeaderState) {
         switch state {
         case .loading:
-            animationView.frame = CGRect(origin: .zero, size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-        case .sticky(let process):
-            animationView.frame.size.height = 200
+            animationView.snp.updateConstraints { make in
+                make.height.equalTo(UIScreen.main.bounds.height)
+            }
+        case .normal:
+            animationView.snp.updateConstraints { make in
+                make.height.equalTo(LoadingAnimationView.height)
+            }
             animationView.layer.masksToBounds = true
             animationView.layer.cornerRadius = 40
             animationView.layer.maskedCorners = [.layerMinXMaxYCorner]
+            layoutIfNeeded()
+        }
+    }
+
+    func trackScrollView(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        if offsetY < 0 {
+            animationView.snp.updateConstraints { make in
+                make.height.equalTo(LoadingAnimationView.height - offsetY)
+            }
+        } else {
+            let displacementY = offsetY / 3
+            let height = max(LoadingAnimationView.minimumHeight, LoadingAnimationView.height - displacementY)
+            animationView.snp.updateConstraints { make in
+                make.height.equalTo(height)
+            }
         }
     }
 }
@@ -60,6 +82,6 @@ extension LoadingHeaderView: TabViewDelegate {
 extension LoadingHeaderView {
     enum HeaderState {
         case loading
-        case sticky(process: CGFloat)
+        case normal
     }
 }
