@@ -11,15 +11,10 @@ import SnapKit
 class LoadingViewController: UIViewController {
     private var dataSource: [LoadingModel] = []
     private var animationData = [LoadingModel]()
-    private let headerView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.frame.size.height = UIScreen.main.bounds.height
-        imageView.backgroundColor = .red
-        return imageView
-    }()
+    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: LoadingHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.tableHeaderView = headerView
+        tableView.tableHeaderView = emptyHeaderView
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderTopPadding = .zero
         tableView.showsVerticalScrollIndicator = false
@@ -28,12 +23,7 @@ class LoadingViewController: UIViewController {
         tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
         return tableView
     }()
-    private lazy var sectionHeader: TabView = {
-        let tabView = TabView()
-        tabView.alpha = 0
-        tabView.delegate = self
-        return tabView
-    }()
+    private let headerView: LoadingHeaderView = LoadingHeaderView(frame: .zero)
     private let navigationBarTransformer: NavigationBarTransformer = {
         let transformer = NavigationBarTransformer()
         transformer.setTransform(startOffset: 0.0, endOffset: 100.0)
@@ -48,10 +38,11 @@ class LoadingViewController: UIViewController {
 
     private func setupUI() {
         navigationBarTransformer.delegate = self
-        [tableView].forEach(view.addSubview)
+        [tableView, headerView].forEach(view.addSubview)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        headerView.setState(.loading)
     }
 
     private func requestData() {
@@ -61,13 +52,9 @@ class LoadingViewController: UIViewController {
             dataSource = data.map{ LoadingModel(num: $0) }
             self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
-                self.headerView.frame.size.height = 200
-                self.headerView.layer.masksToBounds = true
-                self.headerView.layer.cornerRadius = 40
-                self.headerView.layer.maskedCorners = [.layerMinXMaxYCorner]
+                self.headerView.setState(.sticky(process: 0))
             } completion: { _ in
-                self.sectionHeader.alpha = 1
-                self.sectionHeader.select(index: 0)
+                self.headerView.dateBar.select(index: 0)
                 self.fadeInNext()
             }
         }
@@ -93,10 +80,6 @@ extension LoadingViewController: UITableViewDataSource {
         return dataSource.count
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return sectionHeader
-    }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let _ = dataSource[indexPath.row].num else {
             let cell = UITableViewCell()
@@ -106,10 +89,6 @@ extension LoadingViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(LoadingTableViewCell.self)", for: indexPath) as! LoadingTableViewCell
         cell.setup(finishLoading: tableView.isScrollEnabled)
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return TabView.height
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -138,11 +117,5 @@ extension LoadingViewController: UITableViewDelegate {
 extension LoadingViewController: NavigationBarTransformerDelegate {
     var transformerTargetNavigationBar: UINavigationBar? {
         return navigationController?.navigationBar
-    }
-}
-
-extension LoadingViewController: TabViewDelegate {
-    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
-        print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
     }
 }
