@@ -25,9 +25,10 @@ class TabView: UIView {
         TabModel(title: "Tab6 Title"),
         TabModel(title: "Tab7 Title"),
     ]
-    private let tabScrollView: UIScrollView = {
+    private lazy var tabScrollView: UIScrollView = {
         let view = UIScrollView()
         view.showsHorizontalScrollIndicator = false
+        view.delegate = self
         return view
     }()
     private let tabStackView: UIStackView = {
@@ -102,6 +103,35 @@ class TabView: UIView {
             guard let buttonItem = item as? TabItem else { return }
             buttonItem.setHighlight(itemIndex == index)
         }
+    }
+}
+
+// MARK: - Auto-Focus
+extension TabView: UIScrollViewDelegate {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard !decelerate,
+              let nearestIndex = indexNearestCenter else { return }
+        select(index: nearestIndex)
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard let nearestIndex = indexNearestCenter else { return }
+        select(index: nearestIndex)
+    }
+
+    private var indexNearestCenter: Int? {
+        var closestIndex: Int?
+        var minimumDistance = CGFloat.greatestFiniteMagnitude
+        let centerX: CGFloat = self.frame.width / 2
+        tabStackView.arrangedSubviews.enumerated().forEach { (index, item) in
+            let midX = item.convert(item.bounds, to: self).midX
+            let distance = abs(midX - centerX)
+            if distance < minimumDistance {
+                minimumDistance = distance
+                closestIndex = index
+            }
+        }
+        return closestIndex
     }
 }
 
