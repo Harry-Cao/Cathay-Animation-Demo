@@ -48,12 +48,13 @@ class LoadingViewController: UIViewController {
     }
 
     private func setupUI() {
-        [tableView, headerView].forEach(view.addSubview)
+        view.addSubview(tableView)
+        tableView.addSubview(headerView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         headerView.snp.makeConstraints { make in
-            make.leading.top.trailing.equalToSuperview()
+            make.leading.top.trailing.equalTo(view)
         }
     }
 
