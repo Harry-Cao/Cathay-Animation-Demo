@@ -7,7 +7,6 @@ target 'Cathay-Animation-Demo' do
 
   # Pods for Cathay-Animation-Demo
 
-pod 'Hero', '~> 1.6.2'
 pod 'SnapKit', '~> 5.6.0'
 pod 'SDWebImage', '~> 5.16.0'
 pod 'PanModal'
