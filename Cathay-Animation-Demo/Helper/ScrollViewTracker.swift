@@ -30,7 +30,7 @@ class ScrollViewTracker {
         delegate?.tracker(self, onScroll: process)
     }
 
-    private func process(from offsetY: CGFloat) -> CGFloat {
+    func process(from offsetY: CGFloat) -> CGFloat {
         var process: CGFloat = 0.0
         switch direction {
         case .up:
