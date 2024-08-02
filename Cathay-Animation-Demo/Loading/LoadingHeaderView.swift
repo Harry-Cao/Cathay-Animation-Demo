@@ -57,19 +57,19 @@ class LoadingHeaderView: UIView {
         }
     }
 
-    func trackScrollView(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        if offsetY < 0 {
-            animationView.snp.updateConstraints { make in
-                make.height.equalTo(LoadingAnimationView.height - offsetY)
-            }
-        } else {
-            let displacementY = offsetY / 3
-            let height = max(LoadingAnimationView.minimumHeight, LoadingAnimationView.height - displacementY)
-            animationView.snp.updateConstraints { make in
-                make.height.equalTo(height)
-            }
+    func updateExtraHeight(_ height: CGFloat) {
+        animationView.snp.updateConstraints { make in
+            make.height.equalTo(LoadingAnimationView.height + height)
         }
+    }
+
+    func updateDismissProcess(_ process: CGFloat, minimumHeight: CGFloat) {
+        let displacementY = (LoadingAnimationView.height - minimumHeight) * process
+        let height = LoadingAnimationView.height - displacementY
+        animationView.snp.updateConstraints { make in
+            make.height.equalTo(height)
+        }
+        animationView.updateDismissProcess(process)
     }
 }
 

@@ -24,10 +24,11 @@ class LoadingViewController: UIViewController {
         return tableView
     }()
     private let headerView = LoadingHeaderView()
-    private let navigationBarTransformer: NavigationBarTransformer = {
-        let transformer = NavigationBarTransformer()
-        transformer.setTransform(startOffset: 0.0, endOffset: 100.0)
-        return transformer
+    private lazy var scrollViewTracker: ScrollViewTracker = {
+        let tracker = ScrollViewTracker()
+        tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: 1 / 3)
+        tracker.delegate = self
+        return tracker
     }()
 
     override func viewDidLoad() {
@@ -38,11 +39,15 @@ class LoadingViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        navigationController?.navigationBar.setAlpha(0)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.setAlpha(1)
     }
 
     private func setupUI() {
-        navigationBarTransformer.delegate = self
         [tableView, headerView].forEach(view.addSubview)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -117,19 +122,15 @@ extension LoadingViewController: UITableViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        navigationBarTransformer.trackScrollView(scrollView)
-        headerView.trackScrollView(scrollView)
+        scrollViewTracker.trackScrollView(scrollView)
+        if scrollView.contentOffset.y <= 0 {
+            headerView.updateExtraHeight(abs(scrollView.contentOffset.y))
+        }
     }
 }
 
-extension LoadingViewController: NavigationBarTransformerDelegate {
-    var transformerTargetNavigationBar: UINavigationBar? {
-        return navigationController?.navigationBar
-    }
-    var transformerFactor: CGFloat {
-        return 1 / 3
-    }
-    func transformer(_ transformer: NavigationBarTransformer, displaying process: CGFloat) {
-        headerView.animationView.updateDismissProcess(process)
+extension LoadingViewController: ScrollViewTrackerDelegate {
+    func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
+        headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
     }
 }

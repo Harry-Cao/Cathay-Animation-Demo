@@ -10,7 +10,6 @@ import SnapKit
 
 class LoadingAnimationView: UIView {
     static let height: CGFloat = 200.0
-    static let minimumHeight: CGFloat = 100.0
 
     private let container: UIView = {
         let view = UIView()

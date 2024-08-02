@@ -26,10 +26,11 @@
 		7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabModel.swift */; };
 		7B27F5F82C5886C9000808DF /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F72C5886C9000808DF /* TabItem.swift */; };
 		7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */; };
-		7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */; };
 		7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */; };
 		7B69A9A42C53A30000B0D3D6 /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */; };
 		7B69A9A52C53A30000B0D3D6 /* BottomSheetTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */; };
+		7B7094FA2C5C6DC200D9B3FA /* UINavigationBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7094F92C5C6DC200D9B3FA /* UINavigationBar+Extension.swift */; };
+		7B7094FC2C5C6EEB00D9B3FA /* ScrollViewTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7094FB2C5C6EEB00D9B3FA /* ScrollViewTracker.swift */; };
 		7BA9D2612C59D8A200BC9612 /* BottomSheetPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D2602C59D8A200BC9612 /* BottomSheetPresentable.swift */; };
 		7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F22C4F53B7009CC71D /* MockNetworkHelper.swift */; };
 		7BF922F72C4FBFD6009CC71D /* LoadingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F62C4FBFD6009CC71D /* LoadingModel.swift */; };
@@ -60,10 +61,11 @@
 		7B27F5F52C578FD6000808DF /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
 		7B27F5F72C5886C9000808DF /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewDelegate.swift; sourceTree = "<group>"; };
-		7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarTransformer.swift; sourceTree = "<group>"; };
 		7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetTransition.swift; sourceTree = "<group>"; };
 		7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
+		7B7094F92C5C6DC200D9B3FA /* UINavigationBar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Extension.swift"; sourceTree = "<group>"; };
+		7B7094FB2C5C6EEB00D9B3FA /* ScrollViewTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewTracker.swift; sourceTree = "<group>"; };
 		7BA9D2602C59D8A200BC9612 /* BottomSheetPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentable.swift; sourceTree = "<group>"; };
 		7BF922F22C4F53B7009CC71D /* MockNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkHelper.swift; sourceTree = "<group>"; };
 		7BF922F62C4FBFD6009CC71D /* LoadingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingModel.swift; sourceTree = "<group>"; };
@@ -150,8 +152,9 @@
 				3EBD78002C4EA13D0069F583 /* ViewController.swift */,
 				7B27F5F42C576A05000808DF /* TabView */,
 				7B69A99B2C5385AF00B0D3D6 /* BottomSheet */,
-				7BF922F42C4F80CB009CC71D /* Helper */,
 				7BF922F52C4F80D8009CC71D /* Loading */,
+				7BF922F42C4F80CB009CC71D /* Helper */,
+				7B7094FD2C5C7C4600D9B3FA /* Extension */,
 				3EBD78022C4EA13D0069F583 /* Main.storyboard */,
 				3EBD78052C4EA13D0069F583 /* Assets.xcassets */,
 				3EBD78072C4EA13D0069F583 /* LaunchScreen.storyboard */,
@@ -193,11 +196,19 @@
 			path = Transition;
 			sourceTree = "<group>";
 		};
+		7B7094FD2C5C7C4600D9B3FA /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				7B7094F92C5C6DC200D9B3FA /* UINavigationBar+Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		7BF922F42C4F80CB009CC71D /* Helper */ = {
 			isa = PBXGroup;
 			children = (
 				7BF922F22C4F53B7009CC71D /* MockNetworkHelper.swift */,
-				7B69A9942C5356B900B0D3D6 /* NavigationBarTransformer.swift */,
+				7B7094FB2C5C6EEB00D9B3FA /* ScrollViewTracker.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -343,8 +354,10 @@
 				3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */,
 				3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */,
 				7B1CC3D52C5B9B940019F9B4 /* LoadingHeaderView.swift in Sources */,
+				7B7094FA2C5C6DC200D9B3FA /* UINavigationBar+Extension.swift in Sources */,
 				3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */,
 				7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */,
+				7B7094FC2C5C6EEB00D9B3FA /* ScrollViewTracker.swift in Sources */,
 				7BA9D2612C59D8A200BC9612 /* BottomSheetPresentable.swift in Sources */,
 				3EFF87EB2C5BE66600A97941 /* LoadingAnimationView.swift in Sources */,
 				3E07D3192C5AA8E6009B346C /* BottomSheetAnimator.swift in Sources */,
@@ -354,7 +367,6 @@
 				7B27F5F82C5886C9000808DF /* TabItem.swift in Sources */,
 				7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
-				7B69A9952C5356B900B0D3D6 /* NavigationBarTransformer.swift in Sources */,
 				3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */,
 				3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */,
 				7BF922F72C4FBFD6009CC71D /* LoadingModel.swift in Sources */,
