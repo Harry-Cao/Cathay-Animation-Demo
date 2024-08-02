@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class LoadingTableViewCell: UITableViewCell {
     private let container: UIView = {
@@ -13,7 +14,6 @@ class LoadingTableViewCell: UITableViewCell {
         view.backgroundColor = .blue
         view.layer.masksToBounds = true
         view.layer.cornerRadius = 12
-        view.frame = CGRect(x: 20, y: 20, width: UIScreen.main.bounds.width - 40, height: 60)
         return view
     }()
 
@@ -28,6 +28,9 @@ class LoadingTableViewCell: UITableViewCell {
 
     private func setupUI() {
         [container].forEach(contentView.addSubview)
+        container.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(20)
+        }
     }
 
     func setup(finishLoading: Bool) {
