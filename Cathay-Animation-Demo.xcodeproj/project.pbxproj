@@ -204,6 +204,24 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		7B7094FE2C5C843E00D9B3FA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7B1CC3D42C5B9B940019F9B4 /* LoadingHeaderView.swift */,
+				3EFF87EA2C5BE66600A97941 /* LoadingAnimationView.swift */,
+				3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7B7094FF2C5C844400D9B3FA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7BF922F62C4FBFD6009CC71D /* LoadingModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		7BF922F42C4F80CB009CC71D /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,10 +235,8 @@
 			isa = PBXGroup;
 			children = (
 				3EBD78122C4EA5620069F583 /* LoadingViewController.swift */,
-				7B1CC3D42C5B9B940019F9B4 /* LoadingHeaderView.swift */,
-				3EFF87EA2C5BE66600A97941 /* LoadingAnimationView.swift */,
-				7BF922F62C4FBFD6009CC71D /* LoadingModel.swift */,
-				3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */,
+				7B7094FE2C5C843E00D9B3FA /* View */,
+				7B7094FF2C5C844400D9B3FA /* Model */,
 			);
 			path = Loading;
 			sourceTree = "<group>";
