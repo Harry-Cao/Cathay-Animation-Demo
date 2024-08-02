@@ -157,6 +157,7 @@ extension TabView {
     }
 
     private func indicatorAnimateTo(index: Int) {
+        indicator.layer.removeAllAnimations()
         let toItem = tabStackView.arrangedSubviews[index]
         let toItemRect = toItem.convert(toItem.bounds, to: tabScrollView)
 
