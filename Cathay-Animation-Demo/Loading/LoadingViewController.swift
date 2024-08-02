@@ -23,7 +23,11 @@ class LoadingViewController: UIViewController {
         tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
         return tableView
     }()
-    private let headerView = LoadingHeaderView()
+    private lazy var headerView: LoadingHeaderView = {
+        let view = LoadingHeaderView()
+        view.dateBar.delegate = self
+        return view
+    }()
     private lazy var scrollViewTracker: ScrollViewTracker = {
         let tracker = ScrollViewTracker()
         tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: 1 / 3)
@@ -133,5 +137,11 @@ extension LoadingViewController: UITableViewDelegate {
 extension LoadingViewController: ScrollViewTrackerDelegate {
     func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
         headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
+    }
+}
+
+extension LoadingViewController: TabViewDelegate {
+    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
+        print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
     }
 }

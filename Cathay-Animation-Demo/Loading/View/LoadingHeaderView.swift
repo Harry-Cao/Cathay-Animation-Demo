@@ -11,11 +11,7 @@ import SnapKit
 class LoadingHeaderView: UIView {
     static let height: CGFloat = LoadingAnimationView.height + TabView.height
     let animationView = LoadingAnimationView()
-    lazy var dateBar: TabView = {
-        let tabView = TabView()
-        tabView.delegate = self
-        return tabView
-    }()
+    lazy var dateBar = TabView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -70,12 +66,6 @@ class LoadingHeaderView: UIView {
             make.height.equalTo(height)
         }
         animationView.updateDismissProcess(process)
-    }
-}
-
-extension LoadingHeaderView: TabViewDelegate {
-    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
-        print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
     }
 }
 
