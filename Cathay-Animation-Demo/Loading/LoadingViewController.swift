@@ -11,15 +11,10 @@ import SnapKit
 class LoadingViewController: UIViewController {
     private var dataSource: [LoadingModel] = []
     private var animationData = [LoadingModel]()
-    private let headerView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.frame.size.height = UIScreen.main.bounds.height
-        imageView.backgroundColor = .red
-        return imageView
-    }()
+    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: LoadingHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.tableHeaderView = headerView
+        tableView.tableHeaderView = emptyHeaderView
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderTopPadding = .zero
         tableView.showsVerticalScrollIndicator = false
@@ -28,16 +23,12 @@ class LoadingViewController: UIViewController {
         tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
         return tableView
     }()
-    private lazy var sectionHeader: TabView = {
-        let tabView = TabView()
-        tabView.alpha = 0
-        tabView.delegate = self
-        return tabView
-    }()
-    private let navigationBarTransformer: NavigationBarTransformer = {
-        let transformer = NavigationBarTransformer()
-        transformer.setTransform(startOffset: 0.0, endOffset: 100.0)
-        return transformer
+    private let headerView = LoadingHeaderView()
+    private lazy var scrollViewTracker: ScrollViewTracker = {
+        let tracker = ScrollViewTracker()
+        tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: 1 / 3)
+        tracker.delegate = self
+        return tracker
     }()
 
     override func viewDidLoad() {
@@ -46,28 +37,38 @@ class LoadingViewController: UIViewController {
         requestData()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.setAlpha(0)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.setAlpha(1)
+    }
+
     private func setupUI() {
-        navigationBarTransformer.delegate = self
-        [tableView].forEach(view.addSubview)
+        view.addSubview(tableView)
+        tableView.addSubview(headerView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        headerView.snp.makeConstraints { make in
+            make.leading.top.trailing.equalTo(view)
         }
     }
 
     private func requestData() {
+        headerView.setState(.loading)
         tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
             dataSource = data.map{ LoadingModel(num: $0) }
             self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
-                self.headerView.frame.size.height = 200
-                self.headerView.layer.masksToBounds = true
-                self.headerView.layer.cornerRadius = 40
-                self.headerView.layer.maskedCorners = [.layerMinXMaxYCorner]
+                self.headerView.setState(.normal)
             } completion: { _ in
-                self.sectionHeader.alpha = 1
-                self.sectionHeader.select(index: 0)
+                self.headerView.dateBar.select(index: 0)
                 self.fadeInNext()
             }
         }
@@ -93,10 +94,6 @@ extension LoadingViewController: UITableViewDataSource {
         return dataSource.count
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return sectionHeader
-    }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let _ = dataSource[indexPath.row].num else {
             let cell = UITableViewCell()
@@ -106,10 +103,6 @@ extension LoadingViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(LoadingTableViewCell.self)", for: indexPath) as! LoadingTableViewCell
         cell.setup(finishLoading: tableView.isScrollEnabled)
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return TabView.height
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -130,19 +123,15 @@ extension LoadingViewController: UITableViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        navigationBarTransformer.trackScrollView(scrollView)
-        tableView.contentInsetAdjustmentBehavior = scrollView.contentOffset.y > 50 ? .always : .never
+        scrollViewTracker.trackScrollView(scrollView)
+        if scrollView.contentOffset.y <= 0 {
+            headerView.updateExtraHeight(abs(scrollView.contentOffset.y))
+        }
     }
 }
 
-extension LoadingViewController: NavigationBarTransformerDelegate {
-    var transformerTargetNavigationBar: UINavigationBar? {
-        return navigationController?.navigationBar
-    }
-}
-
-extension LoadingViewController: TabViewDelegate {
-    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
-        print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
+extension LoadingViewController: ScrollViewTrackerDelegate {
+    func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
+        headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
     }
 }
