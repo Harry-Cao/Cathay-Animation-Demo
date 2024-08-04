@@ -1,5 +1,5 @@
 //
-//  LoadingModel.swift
+//  FlightModel.swift
 //  Cathay-Animation-Demo
 //
 //  Created by harry.weixian.cao on 2024/7/23.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-final class LoadingModel {
-    var num: Int?
+final class FlightModel {
+    let id: Int
     var pop: Bool = false
 
-    init(num: Int? = nil) {
-        self.num = num
+    init(id: Int) {
+        self.id = id
     }
 }

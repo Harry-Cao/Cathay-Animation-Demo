@@ -8,9 +8,15 @@
 import Foundation
 
 class TabModel {
-    let title: String
+    var title: String?
 
-    init(title: String) {
+    init(title: String? = nil) {
         self.title = title
+    }
+}
+
+extension TabModel {
+    static var loading: TabModel {
+        return TabModel()
     }
 }

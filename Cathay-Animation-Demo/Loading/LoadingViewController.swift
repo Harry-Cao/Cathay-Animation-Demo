@@ -9,8 +9,9 @@ import UIKit
 import SnapKit
 
 class LoadingViewController: UIViewController {
-    private var dataSource: [LoadingModel] = []
-    private var animationData = [LoadingModel]()
+    private var currentIndex: Int = 0
+    private var dataSource = [DateResultModel]()
+    private var animationCache = [FlightModel]()
     private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: LoadingHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -67,12 +68,13 @@ class LoadingViewController: UIViewController {
         tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
-            dataSource = data.map{ LoadingModel(num: $0) }
+            dataSource = data
             self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
                 self.headerView.setState(.normal)
             } completion: { _ in
-                self.headerView.dateBar.select(index: 0)
+                self.headerView.dateBar.setTabs(data.map({ TabModel(title: "\($0.date) flights: \($0.flights.count)") }))
+                self.headerView.dateBar.select(index: self.currentIndex)
                 self.fadeInNext()
             }
         }
@@ -81,13 +83,13 @@ class LoadingViewController: UIViewController {
     private func fadeInNext() {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
             guard let self = self,
-                  let nextIndex = animationData.firstIndex(where: { !$0.pop }),
+                  let nextIndex = animationCache.firstIndex(where: { !$0.pop }),
                   let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? LoadingTableViewCell else {
                 self?.tableView.isScrollEnabled = true
                 return
             }
-            animationData[nextIndex].pop = true
             cell.fadeIn()
+            animationCache[nextIndex].pop = true
             fadeInNext()
         }
     }
@@ -95,17 +97,13 @@ class LoadingViewController: UIViewController {
 
 extension LoadingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource.count
+        return !dataSource.isEmpty ? dataSource[currentIndex].flights.count : 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let _ = dataSource[indexPath.row].num else {
-            let cell = UITableViewCell()
-            cell.backgroundColor = .yellow
-            return cell
-        }
+        let flightModel = dataSource[currentIndex].flights[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(LoadingTableViewCell.self)", for: indexPath) as! LoadingTableViewCell
-        cell.setup(finishLoading: tableView.isScrollEnabled)
+        cell.setup(flightModel: flightModel, finishLoading: tableView.isScrollEnabled)
         return cell
     }
 
@@ -115,8 +113,8 @@ extension LoadingViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard !tableView.isScrollEnabled else { return }
-        let data = dataSource[indexPath.row]
-        animationData.append(data)
+        let flightModel = dataSource[currentIndex].flights[indexPath.row]
+        animationCache.append(flightModel)
     }
 }
 
@@ -142,6 +140,7 @@ extension LoadingViewController: ScrollViewTrackerDelegate {
 
 extension LoadingViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
-        print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
+        currentIndex = toIndex
+        tableView.reloadData()
     }
 }

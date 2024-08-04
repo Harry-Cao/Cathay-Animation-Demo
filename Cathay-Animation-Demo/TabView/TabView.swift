@@ -12,18 +12,18 @@ class TabView: UIView {
     weak var delegate: TabViewDelegate?
     static let height: CGFloat = 68.0
     private(set) var currentIndex: Int = -1
-    private let spacing: CGFloat = 20.0
+    private let spacing: CGFloat = 0.0
     private let indicatorShortenWidth: CGFloat = 40.0
     private let indicatorHeight: CGFloat = 2.0
     private let animationDuration: TimeInterval = 0.5
     private var dataSource: [TabModel] = [
-        TabModel(title: "Tab1 Title"),
-        TabModel(title: "Tab2 Title"),
-        TabModel(title: "Tab3 Title"),
-        TabModel(title: "Tab4 Title"),
-        TabModel(title: "Tab5 Title"),
-        TabModel(title: "Tab6 Title"),
-        TabModel(title: "Tab7 Title"),
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
     ]
     private lazy var tabScrollView: UIScrollView = {
         let view = UIScrollView()
@@ -70,6 +70,11 @@ class TabView: UIView {
             make.width.greaterThanOrEqualTo(tabScrollView).offset(-2*spacing)
         }
         indicator.frame = CGRect(x: 0, y: TabView.height - indicatorHeight, width: 0, height: indicatorHeight)
+    }
+
+    func setTabs(_ tabs: [TabModel]) {
+        dataSource = tabs
+        refresh()
     }
 
     func refresh() {

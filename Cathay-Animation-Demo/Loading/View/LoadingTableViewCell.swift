@@ -16,6 +16,7 @@ class LoadingTableViewCell: UITableViewCell {
         view.layer.cornerRadius = 12
         return view
     }()
+    private let label = UILabel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,18 +28,19 @@ class LoadingTableViewCell: UITableViewCell {
     }
 
     private func setupUI() {
-        [container].forEach(contentView.addSubview)
+        contentView.addSubview(container)
+        [label].forEach(container.addSubview)
         container.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(20)
         }
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
 
-    func setup(finishLoading: Bool) {
-        if finishLoading {
-            container.alpha = 1
-        } else {
-            container.alpha = 0
-        }
+    func setup(flightModel: FlightModel, finishLoading: Bool) {
+        container.alpha = finishLoading ? 1 : 0
+        label.text = String(flightModel.id)
     }
 
     func fadeIn() {
