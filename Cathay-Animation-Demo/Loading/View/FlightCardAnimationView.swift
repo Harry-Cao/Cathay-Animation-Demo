@@ -1,5 +1,5 @@
 //
-//  LoadingAnimationView.swift
+//  FlightCardAnimationView.swift
 //  Cathay-Animation-Demo
 //
 //  Created by HarryCao on 2024/8/1.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class LoadingAnimationView: UIView {
+class FlightCardAnimationView: UIView {
     static let height: CGFloat = 200.0
 
     private let container: UIView = {

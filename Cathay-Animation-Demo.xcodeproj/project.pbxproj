@@ -20,10 +20,10 @@
 		3EBD78042C4EA13D0069F583 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78032C4EA13D0069F583 /* Base */; };
 		3EBD78062C4EA13D0069F583 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78052C4EA13D0069F583 /* Assets.xcassets */; };
 		3EBD78092C4EA13D0069F583 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3EBD78082C4EA13D0069F583 /* Base */; };
-		3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* LoadingViewController.swift */; };
-		3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */; };
-		3EFF87EB2C5BE66600A97941 /* LoadingAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF87EA2C5BE66600A97941 /* LoadingAnimationView.swift */; };
-		7B1CC3D52C5B9B940019F9B4 /* LoadingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1CC3D42C5B9B940019F9B4 /* LoadingHeaderView.swift */; };
+		3EBD78132C4EA5620069F583 /* FlightCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* FlightCardViewController.swift */; };
+		3EBD78152C4EBEE30069F583 /* FlightCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* FlightCardTableViewCell.swift */; };
+		3EFF87EB2C5BE66600A97941 /* FlightCardAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF87EA2C5BE66600A97941 /* FlightCardAnimationView.swift */; };
+		7B1CC3D52C5B9B940019F9B4 /* FlightCardHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1CC3D42C5B9B940019F9B4 /* FlightCardHeaderView.swift */; };
 		7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabModel.swift */; };
 		7B27F5F82C5886C9000808DF /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F72C5886C9000808DF /* TabItem.swift */; };
 		7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */; };
@@ -35,7 +35,7 @@
 		7B7095072C5C91C400D9B3FA /* Cathay_Animation_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7095062C5C91C400D9B3FA /* Cathay_Animation_DemoTests.swift */; };
 		7BA9D2612C59D8A200BC9612 /* BottomSheetPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D2602C59D8A200BC9612 /* BottomSheetPresentable.swift */; };
 		7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F22C4F53B7009CC71D /* MockNetworkHelper.swift */; };
-		7BF922F72C4FBFD6009CC71D /* FlightModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F62C4FBFD6009CC71D /* FlightModel.swift */; };
+		7BF922F72C4FBFD6009CC71D /* FlightCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF922F62C4FBFD6009CC71D /* FlightCardModel.swift */; };
 		8CB75DF1CFD24A8C4587396F /* Pods_Cathay_Animation_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -66,11 +66,11 @@
 		3EBD78052C4EA13D0069F583 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EBD78082C4EA13D0069F583 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3EBD780A2C4EA13D0069F583 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3EBD78122C4EA5620069F583 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
-		3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
-		3EFF87EA2C5BE66600A97941 /* LoadingAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingAnimationView.swift; sourceTree = "<group>"; };
+		3EBD78122C4EA5620069F583 /* FlightCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardViewController.swift; sourceTree = "<group>"; };
+		3EBD78142C4EBEE30069F583 /* FlightCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardTableViewCell.swift; sourceTree = "<group>"; };
+		3EFF87EA2C5BE66600A97941 /* FlightCardAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardAnimationView.swift; sourceTree = "<group>"; };
 		73484422887A58C087246698 /* Pods-Cathay-Animation-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		7B1CC3D42C5B9B940019F9B4 /* LoadingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingHeaderView.swift; sourceTree = "<group>"; };
+		7B1CC3D42C5B9B940019F9B4 /* FlightCardHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardHeaderView.swift; sourceTree = "<group>"; };
 		7B27F5F52C578FD6000808DF /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
 		7B27F5F72C5886C9000808DF /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewDelegate.swift; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 		7B7095062C5C91C400D9B3FA /* Cathay_Animation_DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cathay_Animation_DemoTests.swift; sourceTree = "<group>"; };
 		7BA9D2602C59D8A200BC9612 /* BottomSheetPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentable.swift; sourceTree = "<group>"; };
 		7BF922F22C4F53B7009CC71D /* MockNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkHelper.swift; sourceTree = "<group>"; };
-		7BF922F62C4FBFD6009CC71D /* FlightModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightModel.swift; sourceTree = "<group>"; };
+		7BF922F62C4FBFD6009CC71D /* FlightCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardModel.swift; sourceTree = "<group>"; };
 		9F4803B96DA22A4CC71FB079 /* Pods-Cathay-Animation-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.release.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -231,9 +231,9 @@
 		7B7094FE2C5C843E00D9B3FA /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7B1CC3D42C5B9B940019F9B4 /* LoadingHeaderView.swift */,
-				3EFF87EA2C5BE66600A97941 /* LoadingAnimationView.swift */,
-				3EBD78142C4EBEE30069F583 /* LoadingTableViewCell.swift */,
+				7B1CC3D42C5B9B940019F9B4 /* FlightCardHeaderView.swift */,
+				3EFF87EA2C5BE66600A97941 /* FlightCardAnimationView.swift */,
+				3EBD78142C4EBEE30069F583 /* FlightCardTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -242,7 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				3E6EEFF22C5D325100CF6616 /* DateResultModel.swift */,
-				7BF922F62C4FBFD6009CC71D /* FlightModel.swift */,
+				7BF922F62C4FBFD6009CC71D /* FlightCardModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -267,7 +267,7 @@
 		7BF922F52C4F80D8009CC71D /* Loading */ = {
 			isa = PBXGroup;
 			children = (
-				3EBD78122C4EA5620069F583 /* LoadingViewController.swift */,
+				3EBD78122C4EA5620069F583 /* FlightCardViewController.swift */,
 				7B7094FE2C5C843E00D9B3FA /* View */,
 				7B7094FF2C5C844400D9B3FA /* Model */,
 			);
@@ -430,15 +430,15 @@
 			files = (
 				7B69A9A42C53A30000B0D3D6 /* BottomSheetPresentationController.swift in Sources */,
 				3E91BF892C54CAD60053177B /* PanModalViewController.swift in Sources */,
-				3EBD78132C4EA5620069F583 /* LoadingViewController.swift in Sources */,
+				3EBD78132C4EA5620069F583 /* FlightCardViewController.swift in Sources */,
 				3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */,
-				7B1CC3D52C5B9B940019F9B4 /* LoadingHeaderView.swift in Sources */,
+				7B1CC3D52C5B9B940019F9B4 /* FlightCardHeaderView.swift in Sources */,
 				7B7094FA2C5C6DC200D9B3FA /* UINavigationBar+Extension.swift in Sources */,
 				3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */,
 				7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */,
 				7B7094FC2C5C6EEB00D9B3FA /* ScrollViewTracker.swift in Sources */,
 				7BA9D2612C59D8A200BC9612 /* BottomSheetPresentable.swift in Sources */,
-				3EFF87EB2C5BE66600A97941 /* LoadingAnimationView.swift in Sources */,
+				3EFF87EB2C5BE66600A97941 /* FlightCardAnimationView.swift in Sources */,
 				3E07D3192C5AA8E6009B346C /* BottomSheetAnimator.swift in Sources */,
 				3EBD77FD2C4EA13D0069F583 /* AppDelegate.swift in Sources */,
 				3E6EEFF32C5D325100CF6616 /* DateResultModel.swift in Sources */,
@@ -448,8 +448,8 @@
 				7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
 				3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */,
-				3EBD78152C4EBEE30069F583 /* LoadingTableViewCell.swift in Sources */,
-				7BF922F72C4FBFD6009CC71D /* FlightModel.swift in Sources */,
+				3EBD78152C4EBEE30069F583 /* FlightCardTableViewCell.swift in Sources */,
+				7BF922F72C4FBFD6009CC71D /* FlightCardModel.swift in Sources */,
 				3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */,
 				7BF922F32C4F53B7009CC71D /* MockNetworkHelper.swift in Sources */,
 				7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */,

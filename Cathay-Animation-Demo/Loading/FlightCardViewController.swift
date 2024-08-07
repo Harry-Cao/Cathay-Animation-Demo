@@ -1,5 +1,5 @@
 //
-//  LoadingViewController.swift
+//  FlightCardViewController.swift
 //  Cathay-Animation-Demo
 //
 //  Created by HarryCao on 2024/7/22.
@@ -8,11 +8,11 @@
 import UIKit
 import SnapKit
 
-class LoadingViewController: UIViewController {
+class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
     private var dataSource = [DateResultModel]()
-    private var animationCache = [FlightModel]()
-    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: LoadingHeaderView.height)))
+    private var animationCache = [FlightCardModel]()
+    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: FlightCardHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.tableHeaderView = emptyHeaderView
@@ -21,11 +21,11 @@ class LoadingViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
+        tableView.register(FlightCardTableViewCell.self, forCellReuseIdentifier: "\(FlightCardTableViewCell.self)")
         return tableView
     }()
-    private lazy var headerView: LoadingHeaderView = {
-        let view = LoadingHeaderView()
+    private lazy var headerView: FlightCardHeaderView = {
+        let view = FlightCardHeaderView()
         view.dateBar.delegate = self
         return view
     }()
@@ -84,7 +84,7 @@ class LoadingViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
             guard let self = self,
                   let nextIndex = animationCache.firstIndex(where: { !$0.pop }),
-                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? LoadingTableViewCell else {
+                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? FlightCardTableViewCell else {
                 self?.tableView.isScrollEnabled = true
                 return
             }
@@ -95,14 +95,14 @@ class LoadingViewController: UIViewController {
     }
 }
 
-extension LoadingViewController: UITableViewDataSource {
+extension FlightCardViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return !dataSource.isEmpty ? dataSource[currentIndex].flights.count : 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let flightModel = dataSource[currentIndex].flights[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(LoadingTableViewCell.self)", for: indexPath) as! LoadingTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
         cell.setup(flightModel: flightModel, finishLoading: tableView.isScrollEnabled)
         return cell
     }
@@ -118,7 +118,7 @@ extension LoadingViewController: UITableViewDataSource {
     }
 }
 
-extension LoadingViewController: UITableViewDelegate {
+extension FlightCardViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true)
@@ -132,13 +132,13 @@ extension LoadingViewController: UITableViewDelegate {
     }
 }
 
-extension LoadingViewController: ScrollViewTrackerDelegate {
+extension FlightCardViewController: ScrollViewTrackerDelegate {
     func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
         headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
     }
 }
 
-extension LoadingViewController: TabViewDelegate {
+extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
         currentIndex = toIndex
         tableView.reloadData()

@@ -13,7 +13,7 @@ struct MockNetworkHelper {
             var dataSource = [DateResultModel]()
             (0...7).forEach {
                 let randomNum = Int.random(in: 0...20)
-                let flights = (0...randomNum).map({ FlightModel(id: $0) })
+                let flights = (0...randomNum).map({ FlightCardModel(id: $0) })
                 dataSource.append(DateResultModel(date: "Day \($0)", flights: flights))
             }
             callBack(dataSource)

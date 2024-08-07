@@ -9,5 +9,5 @@ import Foundation
 
 struct DateResultModel {
     let date: String
-    let flights: [FlightModel]
+    let flights: [FlightCardModel]
 }
