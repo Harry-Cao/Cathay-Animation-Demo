@@ -10,36 +10,39 @@ import SnapKit
 
 class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
+    private let shortenFactor: CGFloat = 1 / 3
     private var dataSource = [DateResultModel]()
-    private var animationCache = [FlightCardModel]()
-    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: FlightCardHeaderView.height)))
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.tableHeaderView = emptyHeaderView
-        tableView.contentInsetAdjustmentBehavior = .never
-        tableView.sectionHeaderTopPadding = .zero
-        tableView.showsVerticalScrollIndicator = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(FlightCardTableViewCell.self, forCellReuseIdentifier: "\(FlightCardTableViewCell.self)")
-        return tableView
-    }()
+
     private lazy var headerView: FlightCardHeaderView = {
         let view = FlightCardHeaderView()
         view.dateBar.delegate = self
         return view
     }()
+    private lazy var scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.showsVerticalScrollIndicator = false
+        view.showsHorizontalScrollIndicator = false
+        view.contentInsetAdjustmentBehavior = .never
+        view.delegate = self
+        view.panGestureRecognizer.delegate = self
+        return view
+    }()
     private lazy var scrollViewTracker: ScrollViewTracker = {
         let tracker = ScrollViewTracker()
-        tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: 1 / 3)
+        tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: shortenFactor)
         tracker.delegate = self
         return tracker
+    }()
+    private lazy var pageController: FlightCardPageController = {
+        let controller = FlightCardPageController()
+//        controller.delegate = self
+        return controller
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        requestData()
+        loadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -53,77 +56,44 @@ class FlightCardViewController: UIViewController {
     }
 
     private func setupUI() {
-        view.addSubview(tableView)
-        tableView.addSubview(headerView)
-        tableView.snp.makeConstraints { make in
+        view.backgroundColor = .systemBackground
+        view.addSubview(scrollView)
+        addChild(pageController)
+        [pageController.view, headerView].forEach(scrollView.addSubview)
+        scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        pageController.view.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(FlightCardHeaderView.height)
+            make.leading.bottom.trailing.equalToSuperview()
+            make.height.equalTo(1000)
+            make.width.equalTo(view)
         }
         headerView.snp.makeConstraints { make in
             make.leading.top.trailing.equalTo(view)
         }
     }
 
-    private func requestData() {
+    private func loadData() {
+        view.isUserInteractionEnabled = false
         headerView.setState(.loading)
-        tableView.isScrollEnabled = false
-        MockNetworkHelper.mockRequestData { [weak self] data in
+        MockNetworkHelper.requestData { [weak self] data in
             guard let self = self else { return }
-            dataSource = data
-            self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
                 self.headerView.setState(.normal)
             } completion: { _ in
+                self.view.isUserInteractionEnabled = true
                 self.headerView.dateBar.setTabs(data.map({ TabModel(title: "\($0.date) flights: \($0.flights.count)") }))
+                self.pageController.pages = data.map({ FlightCardPage(date: $0.date) })
                 self.headerView.dateBar.select(index: self.currentIndex)
-                self.fadeInNext()
+                guard let firstPage = self.pageController.pages.first else { return }
+                self.pageController.setViewControllers([firstPage], direction: .forward, animated: false)
             }
-        }
-    }
-
-    private func fadeInNext() {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
-            guard let self = self,
-                  let nextIndex = animationCache.firstIndex(where: { !$0.pop }),
-                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? FlightCardTableViewCell else {
-                self?.tableView.isScrollEnabled = true
-                return
-            }
-            cell.fadeIn()
-            animationCache[nextIndex].pop = true
-            fadeInNext()
         }
     }
 }
 
-extension FlightCardViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return !dataSource.isEmpty ? dataSource[currentIndex].flights.count : 0
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let flightModel = dataSource[currentIndex].flights[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
-        cell.setup(flightModel: flightModel, finishLoading: tableView.isScrollEnabled)
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard !tableView.isScrollEnabled else { return }
-        let flightModel = dataSource[currentIndex].flights[indexPath.row]
-        animationCache.append(flightModel)
-    }
-}
-
-extension FlightCardViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        self.dismiss(animated: true)
-    }
-
+extension FlightCardViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollViewTracker.trackScrollView(scrollView)
         if scrollView.contentOffset.y <= 0 {
@@ -140,7 +110,33 @@ extension FlightCardViewController: ScrollViewTrackerDelegate {
 
 extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
+        guard currentIndex != toIndex else { return }
+        let direction: UIPageViewController.NavigationDirection = toIndex > currentIndex ? .forward : .reverse
+        let vc = pageController.pages[toIndex]
+        self.pageController.setViewControllers([vc], direction: direction, animated: true)
         currentIndex = toIndex
-        tableView.reloadData()
+    }
+}
+
+extension FlightCardViewController: UIPageViewControllerDelegate {
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        print("!!!willTransitionTo: \(pageController.pages.firstIndex(of: pendingViewControllers.first! as! FlightCardPage)!)")
+    }
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        print("!!!didFinishAnimating: \(pageController.pages.firstIndex(of: previousViewControllers.first! as! FlightCardPage)!)")
+    }
+}
+
+extension FlightCardViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
     }
 }
