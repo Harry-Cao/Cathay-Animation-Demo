@@ -182,7 +182,7 @@
 				3EBD78002C4EA13D0069F583 /* ViewController.swift */,
 				7B27F5F42C576A05000808DF /* TabView */,
 				7B69A99B2C5385AF00B0D3D6 /* BottomSheet */,
-				7BF922F52C4F80D8009CC71D /* Loading */,
+				7BF922F52C4F80D8009CC71D /* FlightCard */,
 				7BF922F42C4F80CB009CC71D /* Helper */,
 				7B7094FD2C5C7C4600D9B3FA /* Extension */,
 				3EBD78022C4EA13D0069F583 /* Main.storyboard */,
@@ -271,7 +271,7 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		7BF922F52C4F80D8009CC71D /* Loading */ = {
+		7BF922F52C4F80D8009CC71D /* FlightCard */ = {
 			isa = PBXGroup;
 			children = (
 				3EBD78122C4EA5620069F583 /* FlightCardViewController.swift */,
@@ -280,7 +280,7 @@
 				7B7094FE2C5C843E00D9B3FA /* View */,
 				7B7094FF2C5C844400D9B3FA /* Model */,
 			);
-			path = Loading;
+			path = FlightCard;
 			sourceTree = "<group>";
 		};
 		B9DBCC294FF5A28571AE7710 /* Pods */ = {
