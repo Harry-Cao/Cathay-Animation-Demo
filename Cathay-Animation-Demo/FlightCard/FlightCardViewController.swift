@@ -12,6 +12,7 @@ class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
     private let shortenFactor: CGFloat = 1 / 3
     private var dataSource = [DateResultModel]()
+    private var pages = [FlightCardPage]()
 
     private lazy var headerView: FlightCardHeaderView = {
         let view = FlightCardHeaderView()
@@ -24,7 +25,6 @@ class FlightCardViewController: UIViewController {
         view.showsHorizontalScrollIndicator = false
         view.contentInsetAdjustmentBehavior = .never
         view.delegate = self
-        view.panGestureRecognizer.delegate = self
         return view
     }()
     private lazy var scrollViewTracker: ScrollViewTracker = {
@@ -33,11 +33,15 @@ class FlightCardViewController: UIViewController {
         tracker.delegate = self
         return tracker
     }()
-    private lazy var pageController: FlightCardPageController = {
-        let controller = FlightCardPageController()
-//        controller.delegate = self
+    private lazy var pageController: UIPageViewController = {
+        let controller = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        controller.delegate = self
         return controller
     }()
+    private var currentPage: FlightCardPage? {
+        guard (0...pages.count-1).contains(currentIndex) else { return nil }
+        return pages[currentIndex]
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +59,11 @@ class FlightCardViewController: UIViewController {
         navigationController?.navigationBar.setAlpha(1)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layoutPageController()
+    }
+
     private func setupUI() {
         view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
@@ -66,11 +75,20 @@ class FlightCardViewController: UIViewController {
         pageController.view.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(FlightCardHeaderView.height)
             make.leading.bottom.trailing.equalToSuperview()
-            make.height.equalTo(1000)
+            make.height.equalTo(0)
             make.width.equalTo(view)
         }
         headerView.snp.makeConstraints { make in
             make.leading.top.trailing.equalTo(view)
+        }
+    }
+
+    private func layoutPageController() {
+        let topSafeInset = view.safeAreaInsets.top
+        let extraHeight = (200 - topSafeInset) / shortenFactor
+        let pageHeight = view.bounds.height - FlightCardHeaderView.height + extraHeight
+        pageController.view.snp.updateConstraints { make in
+            make.height.equalTo(pageHeight)
         }
     }
 
@@ -84,12 +102,23 @@ class FlightCardViewController: UIViewController {
             } completion: { _ in
                 self.view.isUserInteractionEnabled = true
                 self.headerView.dateBar.setTabs(data.map({ TabModel(title: "\($0.date) flights: \($0.flights.count)") }))
-                self.pageController.pages = data.map({ FlightCardPage(date: $0.date) })
+                self.pages = data.map({
+                    let page = FlightCardPage(date: $0.date)
+                    page.delegate = self
+                    return page
+                })
                 self.headerView.dateBar.select(index: self.currentIndex)
-                guard let firstPage = self.pageController.pages.first else { return }
+                guard let firstPage = self.pages.first else { return }
                 self.pageController.setViewControllers([firstPage], direction: .forward, animated: false)
             }
         }
+    }
+}
+
+// MARK: - FlightCardPageDelegate
+extension FlightCardViewController: FlightCardPageDelegate {
+    func pageViewDidPanOnScrollView(_ scrollView: UIScrollView) {
+        
     }
 }
 
@@ -112,31 +141,24 @@ extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
         guard currentIndex != toIndex else { return }
         let direction: UIPageViewController.NavigationDirection = toIndex > currentIndex ? .forward : .reverse
-        let vc = pageController.pages[toIndex]
-        self.pageController.setViewControllers([vc], direction: direction, animated: true)
+        let vc = pages[toIndex]
+        pageController.setViewControllers([vc], direction: direction, animated: true)
         currentIndex = toIndex
     }
 }
 
 extension FlightCardViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        print("!!!willTransitionTo: \(pageController.pages.firstIndex(of: pendingViewControllers.first! as! FlightCardPage)!)")
+        print("!!!willTransitionTo: \(pages.firstIndex(of: pendingViewControllers.first! as! FlightCardPage)!)")
     }
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        print("!!!didFinishAnimating: \(pageController.pages.firstIndex(of: previousViewControllers.first! as! FlightCardPage)!)")
+        print("!!!didFinishAnimating: \(pages.firstIndex(of: previousViewControllers.first! as! FlightCardPage)!)")
     }
 }
 
 extension FlightCardViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return false
+        guard let currentPage = currentPage else { return false }
+        return otherGestureRecognizer.view == currentPage.tableView
     }
 }

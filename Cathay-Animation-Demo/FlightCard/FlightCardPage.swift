@@ -8,17 +8,18 @@
 import UIKit
 
 class FlightCardPage: UIViewController {
+    weak var delegate: FlightCardPageDelegate?
+    private var scrollObserver: NSKeyValueObservation?
     private let date: String
     private var flightModels = [FlightCardModel]()
     private var animationCache = [FlightCardModel]()
-    private lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderTopPadding = .zero
         tableView.showsVerticalScrollIndicator = false
         tableView.delegate = self
         tableView.dataSource = self
-//        tableView.panGestureRecognizer.delegate = self
         tableView.register(FlightCardTableViewCell.self, forCellReuseIdentifier: "\(FlightCardTableViewCell.self)")
         return tableView
     }()
@@ -35,6 +36,7 @@ class FlightCardPage: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        observe(scrollView: tableView)
         requestData()
     }
 
@@ -101,8 +103,11 @@ extension FlightCardPage: UITableViewDelegate {
     }
 }
 
-extension FlightCardPage: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+extension FlightCardPage {
+    func observe(scrollView: UIScrollView?) {
+        scrollObserver?.invalidate()
+        scrollObserver = scrollView?.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
+            self?.delegate?.pageViewDidPanOnScrollView(scrollView)
+        }
     }
 }
