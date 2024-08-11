@@ -49,8 +49,8 @@ extension ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let type = dataSource[indexPath.row]
         switch type {
-        case .loading:
-            let vc = LoadingViewController()
+        case .flightCard:
+            let vc = FlightCardViewController()
             let naviVC = UINavigationController(rootViewController: vc)
             naviVC.modalPresentationStyle = .fullScreen
             self.present(naviVC, animated: true)
@@ -75,15 +75,15 @@ extension ViewController: UITableViewDelegate {
 
 extension ViewController {
     enum DemoType: CaseIterable {
-        case loading
+        case flightCard
         case bottomSheet_selfMake
         case bottomSheet_system
         case bottomSheet_panModal
 
         var title: String {
             switch self {
-            case .loading:
-                return "Loading"
+            case .flightCard:
+                return "Flight Card"
             case .bottomSheet_selfMake:
                 return "BottomSheet Self Make"
             case .bottomSheet_system:

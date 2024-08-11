@@ -1,5 +1,5 @@
 //
-//  LoadingHeaderView.swift
+//  FlightCardHeaderView.swift
 //  Cathay-Animation-Demo
 //
 //  Created by harry.weixian.cao on 2024/8/1.
@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class LoadingHeaderView: UIView {
-    static let height: CGFloat = LoadingAnimationView.height + TabView.height
-    let animationView = LoadingAnimationView()
+class FlightCardHeaderView: UIView {
+    static let height: CGFloat = FlightCardAnimationView.height + TabView.height
+    let animationView = FlightCardAnimationView()
     lazy var dateBar = TabView()
 
     override init(frame: CGRect) {
@@ -44,7 +44,7 @@ class LoadingHeaderView: UIView {
             }
         case .normal:
             animationView.snp.updateConstraints { make in
-                make.height.equalTo(LoadingAnimationView.height)
+                make.height.equalTo(FlightCardAnimationView.height)
             }
             animationView.layer.masksToBounds = true
             animationView.layer.cornerRadius = 40
@@ -55,13 +55,13 @@ class LoadingHeaderView: UIView {
 
     func updateExtraHeight(_ height: CGFloat) {
         animationView.snp.updateConstraints { make in
-            make.height.equalTo(LoadingAnimationView.height + height)
+            make.height.equalTo(FlightCardAnimationView.height + height)
         }
     }
 
     func updateDismissProcess(_ process: CGFloat, minimumHeight: CGFloat) {
-        let displacementY = (LoadingAnimationView.height - minimumHeight) * process
-        let height = LoadingAnimationView.height - displacementY
+        let displacementY = (FlightCardAnimationView.height - minimumHeight) * process
+        let height = FlightCardAnimationView.height - displacementY
         animationView.snp.updateConstraints { make in
             make.height.equalTo(height)
         }
@@ -69,7 +69,7 @@ class LoadingHeaderView: UIView {
     }
 }
 
-extension LoadingHeaderView {
+extension FlightCardHeaderView {
     enum HeaderState {
         case loading
         case normal

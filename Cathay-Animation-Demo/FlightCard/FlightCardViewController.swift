@@ -1,5 +1,5 @@
 //
-//  LoadingViewController.swift
+//  FlightCardViewController.swift
 //  Cathay-Animation-Demo
 //
 //  Created by HarryCao on 2024/7/22.
@@ -8,10 +8,10 @@
 import UIKit
 import SnapKit
 
-class LoadingViewController: UIViewController {
-    private var dataSource: [LoadingModel] = []
-    private var animationData = [LoadingModel]()
-    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: LoadingHeaderView.height)))
+class FlightCardViewController: UIViewController {
+    private var dataSource: [FlightCardModel] = []
+    private var animationData = [FlightCardModel]()
+    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: FlightCardHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.tableHeaderView = emptyHeaderView
@@ -20,11 +20,11 @@ class LoadingViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: "\(LoadingTableViewCell.self)")
+        tableView.register(FlightCardTableViewCell.self, forCellReuseIdentifier: "\(FlightCardTableViewCell.self)")
         return tableView
     }()
-    private lazy var headerView: LoadingHeaderView = {
-        let view = LoadingHeaderView()
+    private lazy var headerView: FlightCardHeaderView = {
+        let view = FlightCardHeaderView()
         view.dateBar.delegate = self
         return view
     }()
@@ -67,7 +67,7 @@ class LoadingViewController: UIViewController {
         tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
-            dataSource = data.map{ LoadingModel(num: $0) }
+            dataSource = data.map{ FlightCardModel(num: $0) }
             self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
                 self.headerView.setState(.normal)
@@ -82,7 +82,7 @@ class LoadingViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
             guard let self = self,
                   let nextIndex = animationData.firstIndex(where: { !$0.pop }),
-                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? LoadingTableViewCell else {
+                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? FlightCardTableViewCell else {
                 self?.tableView.isScrollEnabled = true
                 return
             }
@@ -93,7 +93,7 @@ class LoadingViewController: UIViewController {
     }
 }
 
-extension LoadingViewController: UITableViewDataSource {
+extension FlightCardViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -104,7 +104,7 @@ extension LoadingViewController: UITableViewDataSource {
             cell.backgroundColor = .yellow
             return cell
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(LoadingTableViewCell.self)", for: indexPath) as! LoadingTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
         cell.setup(finishLoading: tableView.isScrollEnabled)
         return cell
     }
@@ -120,7 +120,7 @@ extension LoadingViewController: UITableViewDataSource {
     }
 }
 
-extension LoadingViewController: UITableViewDelegate {
+extension FlightCardViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true)
@@ -134,13 +134,13 @@ extension LoadingViewController: UITableViewDelegate {
     }
 }
 
-extension LoadingViewController: ScrollViewTrackerDelegate {
+extension FlightCardViewController: ScrollViewTrackerDelegate {
     func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
         headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
     }
 }
 
-extension LoadingViewController: TabViewDelegate {
+extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
         print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
     }
