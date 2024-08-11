@@ -10,7 +10,8 @@ import SnapKit
 
 class FlightCardViewController: UIViewController {
     private var dataSource: [FlightCardModel] = []
-    private var animationData = [FlightCardModel]()
+    private var displayingIndexPaths = Set<IndexPath>()
+    private var orderedIndexPaths = [IndexPath]()
     private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: FlightCardHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -34,6 +35,9 @@ class FlightCardViewController: UIViewController {
         tracker.delegate = self
         return tracker
     }()
+    private var minimumCellNum: Int {
+        return Int(ceil((UIScreen.main.bounds.height - FlightCardHeaderView.height) / FlightCardTableViewCell.height))
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,20 +77,25 @@ class FlightCardViewController: UIViewController {
                 self.headerView.setState(.normal)
             } completion: { _ in
                 self.headerView.dateBar.select(index: 0)
-                self.fadeInNext()
+                self.startFadeIn()
             }
         }
+    }
+
+    private func startFadeIn() {
+        orderedIndexPaths = displayingIndexPaths.sorted(by: { $0.row < $1.row })
+        fadeInNext()
     }
 
     private func fadeInNext() {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
             guard let self = self,
-                  let nextIndex = animationData.firstIndex(where: { !$0.pop }),
-                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? FlightCardTableViewCell else {
+                  let indexPath = orderedIndexPaths.first,
+                  let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
                 self?.tableView.isScrollEnabled = true
                 return
             }
-            animationData[nextIndex].pop = true
+            orderedIndexPaths.removeFirst()
             cell.fadeIn()
             fadeInNext()
         }
@@ -95,11 +104,11 @@ class FlightCardViewController: UIViewController {
 
 extension FlightCardViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource.count
+        return max(minimumCellNum, dataSource.count)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let _ = dataSource[indexPath.row].num else {
+        guard let _ = getModelFrom(index: indexPath.row) else {
             let cell = UITableViewCell()
             cell.backgroundColor = .yellow
             return cell
@@ -110,13 +119,21 @@ extension FlightCardViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return FlightCardTableViewCell.height
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard !tableView.isScrollEnabled else { return }
-        let data = dataSource[indexPath.row]
-        animationData.append(data)
+        displayingIndexPaths.insert(indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        displayingIndexPaths.remove(indexPath)
+    }
+
+    private func getModelFrom(index: Int) -> FlightCardModel? {
+        guard !dataSource.isEmpty,
+              (0...max(0, dataSource.count-1)).contains(index) else { return nil }
+        return dataSource[index]
     }
 }
 

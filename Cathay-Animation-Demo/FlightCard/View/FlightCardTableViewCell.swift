@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 class FlightCardTableViewCell: UITableViewCell {
+    static let height: CGFloat = 100.0
     private let container: UIView = {
         let view = UIView()
         view.backgroundColor = .blue

@@ -11,7 +11,8 @@ struct MockNetworkHelper {
     static func mockRequestData(callBack: @escaping ([Int]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
             var dataSource = [Int]()
-            for i in 0...20 {
+            let random = Int.random(in: 0...20)
+            for i in 0...random {
                 dataSource.append(i)
             }
             callBack(dataSource)
