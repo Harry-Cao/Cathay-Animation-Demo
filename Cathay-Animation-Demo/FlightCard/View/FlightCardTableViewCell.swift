@@ -34,18 +34,20 @@ class FlightCardTableViewCell: UITableViewCell {
         }
     }
 
-    func setup(finishLoading: Bool) {
-        if finishLoading {
+    func setup(model: FlightCardModel?, finishLoading: Bool) {
+        if finishLoading || model == nil {
             container.alpha = 1
         } else {
             container.alpha = 0
         }
     }
 
-    func fadeIn() {
+    func fadeIn(completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
             container.alpha = 1
+        } completion: { _ in
+            completion?()
         }
     }
 }

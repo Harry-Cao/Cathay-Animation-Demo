@@ -11,7 +11,6 @@ import SnapKit
 class FlightCardViewController: UIViewController {
     private var dataSource: [FlightCardModel] = []
     private var displayingIndexPaths = Set<IndexPath>()
-    private var orderedIndexPaths = [IndexPath]()
     private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: FlightCardHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -37,6 +36,9 @@ class FlightCardViewController: UIViewController {
     }()
     private var minimumCellNum: Int {
         return Int(ceil((UIScreen.main.bounds.height - FlightCardHeaderView.height) / FlightCardTableViewCell.height))
+    }
+    private var orderedDisplayingIndexPaths: [IndexPath] {
+        displayingIndexPaths.sorted(by: { $0.row < $1.row })
     }
 
     override func viewDidLoad() {
@@ -67,8 +69,8 @@ class FlightCardViewController: UIViewController {
     }
 
     private func requestData() {
+        view.isUserInteractionEnabled = false
         headerView.setState(.loading)
-        tableView.isScrollEnabled = false
         MockNetworkHelper.mockRequestData { [weak self] data in
             guard let self = self else { return }
             dataSource = data.map{ FlightCardModel(num: $0) }
@@ -81,25 +83,6 @@ class FlightCardViewController: UIViewController {
             }
         }
     }
-
-    private func startFadeIn() {
-        orderedIndexPaths = displayingIndexPaths.sorted(by: { $0.row < $1.row })
-        fadeInNext()
-    }
-
-    private func fadeInNext() {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
-            guard let self = self,
-                  let indexPath = orderedIndexPaths.first,
-                  let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
-                self?.tableView.isScrollEnabled = true
-                return
-            }
-            orderedIndexPaths.removeFirst()
-            cell.fadeIn()
-            fadeInNext()
-        }
-    }
 }
 
 extension FlightCardViewController: UITableViewDataSource {
@@ -108,13 +91,11 @@ extension FlightCardViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let _ = getModelFrom(index: indexPath.row) else {
-            let cell = UITableViewCell()
-            cell.backgroundColor = .yellow
-            return cell
+        guard let model = getModelFrom(index: indexPath.row) else {
+            return UITableViewCell()
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
-        cell.setup(finishLoading: tableView.isScrollEnabled)
+        cell.setup(model: model, finishLoading: view.isUserInteractionEnabled)
         return cell
     }
 
@@ -160,5 +141,30 @@ extension FlightCardViewController: ScrollViewTrackerDelegate {
 extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
         print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
+    }
+}
+
+// MARK: - Animations
+extension FlightCardViewController {
+    private func startFadeIn() {
+        view.isUserInteractionEnabled = false
+        orderedDisplayingIndexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == orderedDisplayingIndexPaths.count - 1
+            let delay: Double = 0.1 * Double(index)
+            let enableUserInteraction = { [weak self] in
+                guard isLast else { return }
+                self?.view.isUserInteractionEnabled = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) { [weak self] in
+                guard let self = self,
+                      let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
+                    enableUserInteraction()
+                    return
+                }
+                cell.fadeIn {
+                    enableUserInteraction()
+                }
+            }
+        }
     }
 }
