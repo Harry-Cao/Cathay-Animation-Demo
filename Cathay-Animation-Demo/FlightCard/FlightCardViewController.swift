@@ -189,8 +189,9 @@ extension FlightCardViewController: TabViewDelegate {
 extension FlightCardViewController {
     private func startFadeIn() {
         view.isUserInteractionEnabled = false
-        orderedDisplayingIndexPaths.enumerated().forEach { (index, indexPath) in
-            let isLast: Bool = index == orderedDisplayingIndexPaths.count - 1
+        let fadeInIndexPaths = orderedDisplayingIndexPaths.filter({ getModelFrom(index: $0.row) != nil })
+        fadeInIndexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == fadeInIndexPaths.count - 1
             let delay: Double = 0.1 * Double(index)
             let enableUserInteraction = { [weak self] in
                 guard isLast else { return }
