@@ -26,6 +26,7 @@
 		7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabModel.swift */; };
 		7B27F5F82C5886C9000808DF /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F72C5886C9000808DF /* TabItem.swift */; };
 		7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */; };
+		7B318F542C6C8E060061E891 /* FlightCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B318F532C6C8E060061E891 /* FlightCardView.swift */; };
 		7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */; };
 		7B69A9A42C53A30000B0D3D6 /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */; };
 		7B69A9A52C53A30000B0D3D6 /* BottomSheetTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */; };
@@ -72,6 +73,7 @@
 		7B27F5F52C578FD6000808DF /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
 		7B27F5F72C5886C9000808DF /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItem.swift; sourceTree = "<group>"; };
 		7B27F5F92C58D4BA000808DF /* TabViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewDelegate.swift; sourceTree = "<group>"; };
+		7B318F532C6C8E060061E891 /* FlightCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardView.swift; sourceTree = "<group>"; };
 		7B69A9992C53858100B0D3D6 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		7B69A9A02C53A2FF00B0D3D6 /* BottomSheetTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetTransition.swift; sourceTree = "<group>"; };
 		7B69A9A12C53A2FF00B0D3D6 /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				7B1CC3D42C5B9B940019F9B4 /* FlightCardHeaderView.swift */,
 				3EFF87EA2C5BE66600A97941 /* FlightCardAnimationView.swift */,
 				3EBD78142C4EBEE30069F583 /* FlightCardTableViewCell.swift */,
+				7B318F532C6C8E060061E891 /* FlightCardView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				3EBD78132C4EA5620069F583 /* FlightCardViewController.swift in Sources */,
 				3EBD78012C4EA13D0069F583 /* ViewController.swift in Sources */,
 				7B1CC3D52C5B9B940019F9B4 /* FlightCardHeaderView.swift in Sources */,
+				7B318F542C6C8E060061E891 /* FlightCardView.swift in Sources */,
 				7B7094FA2C5C6DC200D9B3FA /* UINavigationBar+Extension.swift in Sources */,
 				3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */,
 				7B69A99A2C53858100B0D3D6 /* BottomSheetViewController.swift in Sources */,

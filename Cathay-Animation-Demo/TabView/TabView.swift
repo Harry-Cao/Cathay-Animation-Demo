@@ -16,15 +16,7 @@ class TabView: UIView {
     private let indicatorShortenWidth: CGFloat = 40.0
     private let indicatorHeight: CGFloat = 2.0
     private let animationDuration: TimeInterval = 0.5
-    private var dataSource: [TabModel] = [
-        TabModel(title: "Tab1 Title"),
-        TabModel(title: "Tab2 Title"),
-        TabModel(title: "Tab3 Title"),
-        TabModel(title: "Tab4 Title"),
-        TabModel(title: "Tab5 Title"),
-        TabModel(title: "Tab6 Title"),
-        TabModel(title: "Tab7 Title"),
-    ]
+    private var dataSource = [TabModel]()
     private lazy var tabScrollView: UIScrollView = {
         let view = UIScrollView()
         view.showsHorizontalScrollIndicator = false
@@ -72,7 +64,7 @@ class TabView: UIView {
         indicator.frame = CGRect(x: 0, y: TabView.height - indicatorHeight, width: 0, height: indicatorHeight)
     }
 
-    func refresh() {
+    private func refresh() {
         tabStackView.arrangedSubviews.forEach {
             tabStackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
@@ -87,6 +79,11 @@ class TabView: UIView {
                 make.height.equalToSuperview()
             }
         }
+    }
+
+    func setTabs(_ tabs: [TabModel]) {
+        dataSource = tabs
+        refresh()
     }
 
     func select(index: Int) {

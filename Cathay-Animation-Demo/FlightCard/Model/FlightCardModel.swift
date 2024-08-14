@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum SwitchDirection {
+    case left
+    case right
+}
+
 final class FlightCardModel {
     var num: Int?
     var pop: Bool = false

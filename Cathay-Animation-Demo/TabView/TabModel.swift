@@ -9,6 +9,7 @@ import Foundation
 
 class TabModel {
     let title: String
+    let date: String = UUID().uuidString
 
     init(title: String) {
         self.title = title

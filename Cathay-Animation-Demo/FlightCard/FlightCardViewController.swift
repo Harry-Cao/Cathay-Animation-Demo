@@ -9,11 +9,14 @@ import UIKit
 import SnapKit
 
 class FlightCardViewController: UIViewController {
-    private var dataSource: [FlightCardModel] = []
+    private var currentIndex: Int = 0
+    private var dataSource = [Int: [FlightCardModel]]()
+    private var tabs = [TabModel]()
     private var displayingIndexPaths = Set<IndexPath>()
     private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: FlightCardHeaderView.height)))
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
+        emptyHeaderView.isUserInteractionEnabled = false
         tableView.tableHeaderView = emptyHeaderView
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.sectionHeaderTopPadding = .zero
@@ -44,6 +47,7 @@ class FlightCardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupDateBar()
         requestData()
     }
 
@@ -68,18 +72,48 @@ class FlightCardViewController: UIViewController {
         }
     }
 
+    private func setupDateBar() {
+        tabs = [
+            TabModel(title: "Tab1"),
+            TabModel(title: "Tab2"),
+            TabModel(title: "Tab3"),
+            TabModel(title: "Tab4"),
+            TabModel(title: "Tab5"),
+            TabModel(title: "Tab6"),
+            TabModel(title: "Tab7"),
+        ]
+        headerView.dateBar.setTabs(tabs)
+    }
+
     private func requestData() {
         view.isUserInteractionEnabled = false
         headerView.setState(.loading)
-        MockNetworkHelper.mockRequestData { [weak self] data in
+        MockNetworkHelper.mockRequestData(date: "") { [weak self] data in
             guard let self = self else { return }
-            dataSource = data.map{ FlightCardModel(num: $0) }
+            dataSource[currentIndex] = data.map{ FlightCardModel(num: $0) }
             self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
                 self.headerView.setState(.normal)
             } completion: { _ in
-                self.headerView.dateBar.select(index: 0)
+                self.headerView.dateBar.select(index: self.currentIndex)
                 self.startFadeIn()
+            }
+        }
+    }
+
+    private func requestData(date: String) {
+        MockNetworkHelper.mockRequestData(date: date) { [weak self] data in
+            guard let self = self,
+                  let index = tabs.firstIndex(where: { $0.date == date }) else { return }
+            dataSource[index] = data.map{ FlightCardModel(num: $0) }
+            if currentIndex == index {
+                view.isUserInteractionEnabled = false
+                tableView.reloadData()
+                tableView.performBatchUpdates {
+                    self.tableView.reloadData()
+                } completion: { _ in
+                    self.startFadeIn()
+                }
             }
         }
     }
@@ -87,13 +121,12 @@ class FlightCardViewController: UIViewController {
 
 extension FlightCardViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return max(minimumCellNum, dataSource.count)
+        // prevent from animation error
+        return max(minimumCellNum, dataSource[currentIndex]?.count ?? 0)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let model = getModelFrom(index: indexPath.row) else {
-            return UITableViewCell()
-        }
+        let model = getModelFrom(index: indexPath.row)
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
         cell.setup(model: model, finishLoading: view.isUserInteractionEnabled)
         return cell
@@ -112,9 +145,10 @@ extension FlightCardViewController: UITableViewDataSource {
     }
 
     private func getModelFrom(index: Int) -> FlightCardModel? {
-        guard !dataSource.isEmpty,
-              (0...max(0, dataSource.count-1)).contains(index) else { return nil }
-        return dataSource[index]
+        guard let data = dataSource[currentIndex],
+              !data.isEmpty,
+              (0...max(0, data.count-1)).contains(index) else { return nil }
+        return data[index]
     }
 }
 
@@ -140,7 +174,14 @@ extension FlightCardViewController: ScrollViewTrackerDelegate {
 
 extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
-        print("!!!didSelect toIndex: \(toIndex), fromIndex: \(fromIndex)")
+        guard fromIndex != -1 else { return }
+        currentIndex = toIndex
+        if dataSource[toIndex] == nil {
+            requestData(date: tabs[toIndex].date)
+        }
+        if toIndex != fromIndex {
+            switchTo(index: toIndex, direction: toIndex > fromIndex ? .left : .right)
+        }
     }
 }
 
@@ -164,6 +205,26 @@ extension FlightCardViewController {
                 cell.fadeIn {
                     enableUserInteraction()
                 }
+            }
+        }
+    }
+
+    private func switchTo(index: Int, direction: SwitchDirection) {
+        view.isUserInteractionEnabled = false
+        orderedDisplayingIndexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == orderedDisplayingIndexPaths.count - 1
+            let enableUserInteraction = { [weak self] in
+                guard isLast else { return }
+                self?.view.isUserInteractionEnabled = true
+                self?.tableView.reloadData()
+            }
+            guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
+                enableUserInteraction()
+                return
+            }
+            let model = getModelFrom(index: index)
+            cell.switchTo(model: model, direction: direction, extraDuration: 0.1 * Double(index)) {
+                enableUserInteraction()
             }
         }
     }
