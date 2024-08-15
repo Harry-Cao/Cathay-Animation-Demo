@@ -41,7 +41,7 @@ class FlightCardViewController: UIViewController {
         return Int(ceil((UIScreen.main.bounds.height - FlightCardHeaderView.height) / FlightCardTableViewCell.height))
     }
     private var orderedDisplayingIndexPaths: [IndexPath] {
-        displayingIndexPaths.sorted(by: { $0.row < $1.row })
+        return displayingIndexPaths.sorted(by: { $0.row < $1.row })
     }
 
     override func viewDidLoad() {
@@ -119,6 +119,7 @@ class FlightCardViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension FlightCardViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // prevent from animation error
@@ -126,7 +127,7 @@ extension FlightCardViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = getModelFrom(index: indexPath.row)
+        let model = getModelFrom(tabIndex: currentIndex, rowIndex: indexPath.row)
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
         cell.setup(model: model, finishLoading: view.isUserInteractionEnabled)
         return cell
@@ -144,11 +145,11 @@ extension FlightCardViewController: UITableViewDataSource {
         displayingIndexPaths.remove(indexPath)
     }
 
-    private func getModelFrom(index: Int) -> FlightCardModel? {
-        guard let data = dataSource[currentIndex],
+    private func getModelFrom(tabIndex: Int, rowIndex: Int) -> FlightCardModel? {
+        guard let data = dataSource[tabIndex],
               !data.isEmpty,
-              (0...max(0, data.count-1)).contains(index) else { return nil }
-        return data[index]
+              (0...max(0, data.count-1)).contains(rowIndex) else { return nil }
+        return data[rowIndex]
     }
 }
 
@@ -166,21 +167,26 @@ extension FlightCardViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - ScrollViewTrackerDelegate
 extension FlightCardViewController: ScrollViewTrackerDelegate {
     func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
         headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
     }
 }
 
+// MARK: - TabViewDelegate
 extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
         guard fromIndex != -1 else { return }
-        currentIndex = toIndex
-        if dataSource[toIndex] == nil {
-            requestData(date: tabs[toIndex].date)
-        }
+        // need action before update index
         if toIndex != fromIndex {
             switchTo(index: toIndex, direction: toIndex > fromIndex ? .left : .right)
+        }
+        currentIndex = toIndex
+        // need action after update index
+        if dataSource[toIndex] == nil {
+            tableView.setContentOffset(.zero, animated: true)
+            requestData(date: tabs[toIndex].date)
         }
     }
 }
@@ -189,9 +195,11 @@ extension FlightCardViewController: TabViewDelegate {
 extension FlightCardViewController {
     private func startFadeIn() {
         view.isUserInteractionEnabled = false
-        let fadeInIndexPaths = orderedDisplayingIndexPaths.filter({ getModelFrom(index: $0.row) != nil })
-        fadeInIndexPaths.enumerated().forEach { (index, indexPath) in
-            let isLast: Bool = index == fadeInIndexPaths.count - 1
+        let animationIndexPaths = orderedDisplayingIndexPaths.filter({
+            return getModelFrom(tabIndex: currentIndex, rowIndex: $0.row) != nil
+        })
+        animationIndexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == animationIndexPaths.count - 1
             let delay: Double = 0.1 * Double(index)
             let enableUserInteraction = { [weak self] in
                 guard isLast else { return }
@@ -212,19 +220,24 @@ extension FlightCardViewController {
 
     private func switchTo(index: Int, direction: SwitchDirection) {
         view.isUserInteractionEnabled = false
-        orderedDisplayingIndexPaths.enumerated().forEach { (index, indexPath) in
-            let isLast: Bool = index == orderedDisplayingIndexPaths.count - 1
+        let animationIndexPaths = orderedDisplayingIndexPaths.filter {
+            return getModelFrom(tabIndex: currentIndex, rowIndex: $0.row) != nil
+            || getModelFrom(tabIndex: index, rowIndex: $0.row) != nil
+        }
+        animationIndexPaths.enumerated().forEach { (itemIndex, indexPath) in
+            let isLast: Bool = itemIndex == animationIndexPaths.count - 1
             let enableUserInteraction = { [weak self] in
                 guard isLast else { return }
                 self?.view.isUserInteractionEnabled = true
                 self?.tableView.reloadData()
+                self?.tableView.setContentOffset(.zero, animated: true)
             }
             guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
                 enableUserInteraction()
                 return
             }
-            let model = getModelFrom(index: index)
-            cell.switchTo(model: model, direction: direction, extraDuration: 0.1 * Double(index)) {
+            let model = getModelFrom(tabIndex: index, rowIndex: indexPath.row)
+            cell.switchTo(model: model, direction: direction, extraDuration: 0.1 * Double(itemIndex)) {
                 enableUserInteraction()
             }
         }

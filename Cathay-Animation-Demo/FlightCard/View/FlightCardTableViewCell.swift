@@ -13,6 +13,7 @@ class FlightCardTableViewCell: UITableViewCell {
     private var currentModel: FlightCardModel?
     private var showingCard = FlightCardView()
     private var standByCard = FlightCardView()
+    private var cards: [FlightCardView] { [showingCard, standByCard] }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -36,12 +37,17 @@ class FlightCardTableViewCell: UITableViewCell {
         }
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cards.forEach { $0.alpha = 0 }
+    }
+
     func setup(model: FlightCardModel?, finishLoading: Bool) {
         currentModel = model
         if !finishLoading || model == nil {
-            showingCard.alpha = 0
+            cards.forEach { $0.alpha = 0 }
         } else {
-            showingCard.alpha = 1
+            cards.forEach { $0.alpha = 1 }
         }
     }
 }
@@ -51,7 +57,7 @@ extension FlightCardTableViewCell {
     func fadeIn(completion: @escaping () -> Void) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            showingCard.alpha = 1
+            cards.forEach { $0.alpha = 1 }
         } completion: { _ in
             completion()
         }
