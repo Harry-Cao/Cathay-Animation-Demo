@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E05B8862C7382680027FBB3 /* FlightCardMainScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E05B8852C7382680027FBB3 /* FlightCardMainScrollView.swift */; };
 		3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E07D3122C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift */; };
 		3E07D3192C5AA8E6009B346C /* BottomSheetAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E07D3182C5AA8E6009B346C /* BottomSheetAnimator.swift */; };
 		3E207DA12C4FF90300BFAFE0 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E207DA02C4FF90300BFAFE0 /* TabView.swift */; };
@@ -56,6 +57,7 @@
 
 /* Begin PBXFileReference section */
 		0ABDF1CDCEC22FDDE9067C27 /* Pods_Cathay_Animation_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cathay_Animation_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E05B8852C7382680027FBB3 /* FlightCardMainScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardMainScrollView.swift; sourceTree = "<group>"; };
 		3E07D3122C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BottomSheetPresentable+Layout.swift"; sourceTree = "<group>"; };
 		3E07D3182C5AA8E6009B346C /* BottomSheetAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetAnimator.swift; sourceTree = "<group>"; };
 		3E207DA02C4FF90300BFAFE0 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 		7B7094FE2C5C843E00D9B3FA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3E05B8852C7382680027FBB3 /* FlightCardMainScrollView.swift */,
 				7B1CC3D42C5B9B940019F9B4 /* FlightCardHeaderView.swift */,
 				3EFF87EA2C5BE66600A97941 /* FlightCardAnimationView.swift */,
 				3EBD78142C4EBEE30069F583 /* FlightCardTableViewCell.swift */,
@@ -482,6 +485,7 @@
 				7B27F5FA2C58D4BA000808DF /* TabViewDelegate.swift in Sources */,
 				3EBD77FF2C4EA13D0069F583 /* SceneDelegate.swift in Sources */,
 				3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */,
+				3E05B8862C7382680027FBB3 /* FlightCardMainScrollView.swift in Sources */,
 				3EBD78152C4EBEE30069F583 /* FlightCardTableViewCell.swift in Sources */,
 				7BF922F72C4FBFD6009CC71D /* FlightCardModel.swift in Sources */,
 				3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */,

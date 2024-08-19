@@ -36,7 +36,7 @@ class FlightCardPage: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        observe(scrollView: tableView)
+        observe()
         requestData()
     }
 
@@ -44,6 +44,13 @@ class FlightCardPage: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+
+    private func observe() {
+        scrollObserver?.invalidate()
+        scrollObserver = tableView.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
+            self?.delegate?.pageViewDidPanOnScrollView(scrollView)
         }
     }
 
@@ -100,14 +107,5 @@ extension FlightCardPage: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true)
-    }
-}
-
-extension FlightCardPage {
-    func observe(scrollView: UIScrollView?) {
-        scrollObserver?.invalidate()
-        scrollObserver = scrollView?.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
-            self?.delegate?.pageViewDidPanOnScrollView(scrollView)
-        }
     }
 }

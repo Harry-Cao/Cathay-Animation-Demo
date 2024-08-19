@@ -13,14 +13,23 @@ class FlightCardViewController: UIViewController {
     private let shortenFactor: CGFloat = 1 / 3
     private var dataSource = [DateResultModel]()
     private var pages = [FlightCardPage]()
+    private var scrollObserver: NSKeyValueObservation?
+    private lazy var anchoredContentOffsetY: CGFloat = {
+        let topSafeInset = view.safeAreaInsets.top
+        let offsetY = (FlightCardAnimationView.height - topSafeInset) / shortenFactor
+        return offsetY
+    }()
+    private var isMainScrollViewAnchored: Bool {
+        return scrollView.contentOffset.y >= anchoredContentOffsetY
+    }
 
     private lazy var headerView: FlightCardHeaderView = {
         let view = FlightCardHeaderView()
         view.dateBar.delegate = self
         return view
     }()
-    private lazy var scrollView: UIScrollView = {
-        let view = UIScrollView()
+    private lazy var scrollView: FlightCardMainScrollView = {
+        let view = FlightCardMainScrollView()
         view.showsVerticalScrollIndicator = false
         view.showsHorizontalScrollIndicator = false
         view.contentInsetAdjustmentBehavior = .never
@@ -46,6 +55,7 @@ class FlightCardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        observe()
         loadData()
     }
 
@@ -83,10 +93,16 @@ class FlightCardViewController: UIViewController {
         }
     }
 
+    private func observe() {
+        scrollObserver?.invalidate()
+        scrollObserver = scrollView.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
+            guard let self else { return }
+            didPanOnMainScrollView(scrollView)
+        }
+    }
+
     private func layoutPageController() {
-        let topSafeInset = view.safeAreaInsets.top
-        let extraHeight = (FlightCardAnimationView.height - topSafeInset) / shortenFactor
-        let pageHeight = view.bounds.height - FlightCardHeaderView.height + extraHeight
+        let pageHeight = view.bounds.height - FlightCardHeaderView.height + anchoredContentOffsetY
         pageController.view.snp.updateConstraints { make in
             make.height.equalTo(pageHeight)
         }
@@ -128,6 +144,10 @@ extension FlightCardViewController: UIScrollViewDelegate {
         if scrollView.contentOffset.y <= 0 {
             headerView.updateExtraHeight(abs(scrollView.contentOffset.y))
         }
+    }
+
+    private func didPanOnMainScrollView(_ scrollView: UIScrollView) {
+        
     }
 }
 
