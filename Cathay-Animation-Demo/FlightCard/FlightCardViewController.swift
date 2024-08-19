@@ -14,13 +14,14 @@ class FlightCardViewController: UIViewController {
     private var dataSource = [DateResultModel]()
     private var pages = [FlightCardPage]()
     private var scrollObserver: NSKeyValueObservation?
+    private var pageScrollViewYOffset: CGFloat = 0.0
     private lazy var anchoredContentOffsetY: CGFloat = {
         let topSafeInset = view.safeAreaInsets.top
         let offsetY = (FlightCardAnimationView.height - topSafeInset) / shortenFactor
         return offsetY
     }()
     private var isMainScrollViewAnchored: Bool {
-        return scrollView.contentOffset.y >= anchoredContentOffsetY
+        return mainScrollView.contentOffset.y >= anchoredContentOffsetY
     }
 
     private lazy var headerView: FlightCardHeaderView = {
@@ -28,7 +29,7 @@ class FlightCardViewController: UIViewController {
         view.dateBar.delegate = self
         return view
     }()
-    private lazy var scrollView: FlightCardMainScrollView = {
+    private lazy var mainScrollView: FlightCardMainScrollView = {
         let view = FlightCardMainScrollView()
         view.showsVerticalScrollIndicator = false
         view.showsHorizontalScrollIndicator = false
@@ -48,7 +49,8 @@ class FlightCardViewController: UIViewController {
         return controller
     }()
     private var currentPage: FlightCardPage? {
-        guard (0...pages.count-1).contains(currentIndex) else { return nil }
+        guard !pages.isEmpty,
+              (0...pages.count-1).contains(currentIndex) else { return nil }
         return pages[currentIndex]
     }
 
@@ -76,10 +78,10 @@ class FlightCardViewController: UIViewController {
 
     private func setupUI() {
         view.backgroundColor = .systemBackground
-        view.addSubview(scrollView)
+        view.addSubview(mainScrollView)
         addChild(pageController)
-        [pageController.view, headerView].forEach(scrollView.addSubview)
-        scrollView.snp.makeConstraints { make in
+        [pageController.view, headerView].forEach(mainScrollView.addSubview)
+        mainScrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         pageController.view.snp.makeConstraints { make in
@@ -95,7 +97,7 @@ class FlightCardViewController: UIViewController {
 
     private func observe() {
         scrollObserver?.invalidate()
-        scrollObserver = scrollView.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
+        scrollObserver = mainScrollView.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
             guard let self else { return }
             didPanOnMainScrollView(scrollView)
         }
@@ -134,7 +136,11 @@ class FlightCardViewController: UIViewController {
 // MARK: - FlightCardPageDelegate
 extension FlightCardViewController: FlightCardPageDelegate {
     func pageViewDidPanOnScrollView(_ scrollView: UIScrollView) {
-        
+        if !isMainScrollViewAnchored && mainScrollView.contentOffset.y <= .zero && scrollView.contentOffset.y <= .zero {
+            scrollView.setContentOffset(CGPoint(x: .zero, y: pageScrollViewYOffset), animated: false)
+        } else {
+            pageScrollViewYOffset = scrollView.contentOffset.y
+        }
     }
 }
 
@@ -147,7 +153,10 @@ extension FlightCardViewController: UIScrollViewDelegate {
     }
 
     private func didPanOnMainScrollView(_ scrollView: UIScrollView) {
-        
+        guard let currentPage else { return }
+        if isMainScrollViewAnchored && currentPage.tableView.contentOffset.y > 0 {
+            scrollView.setContentOffset(CGPoint(x: .zero, y: anchoredContentOffsetY), animated: false)
+        }
     }
 }
 
