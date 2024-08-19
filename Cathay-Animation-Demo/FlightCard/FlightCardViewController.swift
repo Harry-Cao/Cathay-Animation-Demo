@@ -85,7 +85,7 @@ class FlightCardViewController: UIViewController {
 
     private func layoutPageController() {
         let topSafeInset = view.safeAreaInsets.top
-        let extraHeight = (200 - topSafeInset) / shortenFactor
+        let extraHeight = (FlightCardAnimationView.height - topSafeInset) / shortenFactor
         let pageHeight = view.bounds.height - FlightCardHeaderView.height + extraHeight
         pageController.view.snp.updateConstraints { make in
             make.height.equalTo(pageHeight)
@@ -153,12 +153,5 @@ extension FlightCardViewController: UIPageViewControllerDelegate {
     }
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         print("!!!didFinishAnimating: \(pages.firstIndex(of: previousViewControllers.first! as! FlightCardPage)!)")
-    }
-}
-
-extension FlightCardViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard let currentPage = currentPage else { return false }
-        return otherGestureRecognizer.view == currentPage.tableView
     }
 }
