@@ -35,6 +35,7 @@ class FlightCardViewController: UIViewController {
         view.showsHorizontalScrollIndicator = false
         view.contentInsetAdjustmentBehavior = .never
         view.delegate = self
+        view.gestureDelegate = self
         return view
     }()
     private lazy var scrollViewTracker: ScrollViewTracker = {
@@ -138,7 +139,7 @@ extension FlightCardViewController: UIScrollViewDelegate {
         if currentPage.tableView.contentOffset.y > 0 {
             scrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
         }
-        if scrollView.contentOffset.y > anchoredContentOffsetY && currentPage.tableView.contentOffset.y == 0 {
+        if isMainScrollViewAnchored && currentPage.tableView.contentOffset.y == 0 {
             scrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
         }
     }
@@ -168,6 +169,13 @@ extension FlightCardViewController: TabViewDelegate {
         let vc = pages[toIndex]
         pageController.setViewControllers([vc], direction: direction, animated: true)
         currentIndex = toIndex
+    }
+}
+
+// MARK: - FlightCardMainScrollViewGestureDelegate
+extension FlightCardViewController: FlightCardMainScrollViewGestureDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return otherGestureRecognizer.view == currentPage?.tableView
     }
 }
 
