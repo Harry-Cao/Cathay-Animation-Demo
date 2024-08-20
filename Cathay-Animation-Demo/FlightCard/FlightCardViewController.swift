@@ -31,6 +31,7 @@ class FlightCardViewController: UIViewController {
     }()
     private lazy var mainScrollView: FlightCardMainScrollView = {
         let view = FlightCardMainScrollView()
+        view.scrollsToTop = false
         view.showsVerticalScrollIndicator = false
         view.showsHorizontalScrollIndicator = false
         view.contentInsetAdjustmentBehavior = .never
@@ -136,11 +137,12 @@ class FlightCardViewController: UIViewController {
 // MARK: - FlightCardPageDelegate
 extension FlightCardViewController: FlightCardPageDelegate {
     func pageViewDidPanOnScrollView(_ scrollView: UIScrollView) {
-        if !isMainScrollViewAnchored && mainScrollView.contentOffset.y <= .zero && scrollView.contentOffset.y <= .zero {
+        if !isMainScrollViewAnchored {
             scrollView.setContentOffset(CGPoint(x: .zero, y: pageScrollViewYOffset), animated: false)
         } else {
-            pageScrollViewYOffset = scrollView.contentOffset.y
+            mainScrollView.setContentOffset(CGPoint(x: .zero, y: anchoredContentOffsetY), animated: false)
         }
+        pageScrollViewYOffset = scrollView.contentOffset.y
     }
 }
 
@@ -154,7 +156,7 @@ extension FlightCardViewController: UIScrollViewDelegate {
 
     private func didPanOnMainScrollView(_ scrollView: UIScrollView) {
         guard let currentPage else { return }
-        if isMainScrollViewAnchored && currentPage.tableView.contentOffset.y > 0 {
+        if currentPage.tableView.contentOffset.y > 0 {
             scrollView.setContentOffset(CGPoint(x: .zero, y: anchoredContentOffsetY), animated: false)
         }
     }
