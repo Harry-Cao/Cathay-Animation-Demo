@@ -11,9 +11,6 @@ import SnapKit
 class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
     private let shortenFactor: CGFloat = 1 / 3
-    private var dataSource = [DateResultModel]()
-    private var pages = [FlightCardPage]()
-    private var pageScrollViewYOffset: CGFloat = 0.0
     private lazy var anchoredContentOffsetY: CGFloat = {
         let topSafeInset = view.safeAreaInsets.top
         let offsetY = (FlightCardAnimationView.height - topSafeInset) / shortenFactor
@@ -30,7 +27,6 @@ class FlightCardViewController: UIViewController {
     }()
     private lazy var mainScrollView: FlightCardMainScrollView = {
         let view = FlightCardMainScrollView()
-        view.scrollsToTop = false
         view.showsVerticalScrollIndicator = false
         view.showsHorizontalScrollIndicator = false
         view.contentInsetAdjustmentBehavior = .never
@@ -44,15 +40,9 @@ class FlightCardViewController: UIViewController {
         tracker.delegate = self
         return tracker
     }()
-    private lazy var pageController: UIPageViewController = {
-        let controller = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        controller.delegate = self
-        return controller
-    }()
+    private let pageController = FlightCardPageController()
     private var currentPage: FlightCardPage? {
-        guard !pages.isEmpty,
-              (0...pages.count-1).contains(currentIndex) else { return nil }
-        return pages[currentIndex]
+        return pageController.currentPage
     }
 
     override func viewDidLoad() {
@@ -112,14 +102,13 @@ class FlightCardViewController: UIViewController {
             } completion: { _ in
                 self.view.isUserInteractionEnabled = true
                 self.headerView.dateBar.setTabs(data.map({ TabModel(title: "\($0.date) flights: \($0.flights.count)") }))
-                self.pages = data.map({
+                self.pageController.pages = data.map({
                     let page = FlightCardPage(date: $0.date)
                     page.delegate = self
                     return page
                 })
                 self.headerView.dateBar.select(index: self.currentIndex)
-                guard let firstPage = self.pages.first else { return }
-                self.pageController.setViewControllers([firstPage], direction: .forward, animated: false)
+                self.pageController.select(index: self.currentIndex, direction: .forward)
             }
         }
     }
@@ -165,9 +154,10 @@ extension FlightCardViewController: FlightCardPageDelegate {
 extension FlightCardViewController: TabViewDelegate {
     func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
         guard currentIndex != toIndex else { return }
+        currentPage?.tableView.setContentOffset(.zero, animated: true)
+        mainScrollView.setContentOffset(.zero, animated: true)
         let direction: UIPageViewController.NavigationDirection = toIndex > currentIndex ? .forward : .reverse
-        let vc = pages[toIndex]
-        pageController.setViewControllers([vc], direction: direction, animated: true)
+        pageController.select(index: toIndex, direction: direction)
         currentIndex = toIndex
     }
 }
@@ -176,14 +166,5 @@ extension FlightCardViewController: TabViewDelegate {
 extension FlightCardViewController: FlightCardMainScrollViewGestureDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return otherGestureRecognizer.view == currentPage?.tableView
-    }
-}
-
-extension FlightCardViewController: UIPageViewControllerDelegate {
-    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        print("!!!willTransitionTo: \(pages.firstIndex(of: pendingViewControllers.first! as! FlightCardPage)!)")
-    }
-    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        print("!!!didFinishAnimating: \(pages.firstIndex(of: previousViewControllers.first! as! FlightCardPage)!)")
     }
 }

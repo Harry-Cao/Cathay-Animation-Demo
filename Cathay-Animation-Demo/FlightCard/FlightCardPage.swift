@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol FlightCardPageDelegate: AnyObject {
+    func pageViewDidPanOnScrollView(_ scrollView: UIScrollView)
+}
+
 class FlightCardPage: UIViewController {
     weak var delegate: FlightCardPageDelegate?
     private let date: String
