@@ -181,26 +181,19 @@ extension TabView {
         let fromItem = tabStackView.arrangedSubviews[currentIndex]
         let fromItemRect = fromItem.convert(fromItem.bounds, to: tabScrollView)
 
-        let shortenAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .easeIn) { [weak self] in
-            guard let self = self else { return }
-            indicator.frame.origin.x = fromItemRect.minX + (fromItemRect.width - indicatorShortenWidth) / 2
-            indicator.frame.size.width = indicatorShortenWidth
-        }
-        let moveAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .linear) { [weak self] in
+        let shortenMoveAnimator = UIViewPropertyAnimator(duration: animationDuration / 2, curve: .linear) { [weak self] in
             guard let self = self else { return }
             indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorShortenWidth) / 2
+            indicator.frame.size.width = indicatorShortenWidth
         }
-        let elongateAnimator = UIViewPropertyAnimator(duration: animationDuration / 3, curve: .easeOut) { [weak self] in
+        let elongateAnimator = UIViewPropertyAnimator(duration: animationDuration / 2, curve: .easeOut) { [weak self] in
             guard let self = self else { return }
             indicator.frame.origin.x = toItemRect.minX
             indicator.frame.size.width = toItemRect.width
         }
-        shortenAnimator.addCompletion { _ in
-            moveAnimator.startAnimation()
-        }
-        moveAnimator.addCompletion { _ in
+        shortenMoveAnimator.addCompletion { _ in
             elongateAnimator.startAnimation()
         }
-        shortenAnimator.startAnimation()
+        shortenMoveAnimator.startAnimation()
     }
 }
