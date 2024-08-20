@@ -23,7 +23,7 @@ struct MockNetworkHelper {
     static func requestFlights(date: String, callBack: @escaping ([FlightModel]) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
             let randomNum = Int.random(in: 0...20)
-            let flights = (0...randomNum).map({ FlightModel(id: $0, date: date) })
+            let flights = (0...20).map({ FlightModel(id: $0, date: date) })
             callBack(flights)
         }
     }

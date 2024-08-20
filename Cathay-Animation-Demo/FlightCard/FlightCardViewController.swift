@@ -13,7 +13,6 @@ class FlightCardViewController: UIViewController {
     private let shortenFactor: CGFloat = 1 / 3
     private var dataSource = [DateResultModel]()
     private var pages = [FlightCardPage]()
-    private var scrollObserver: NSKeyValueObservation?
     private var pageScrollViewYOffset: CGFloat = 0.0
     private lazy var anchoredContentOffsetY: CGFloat = {
         let topSafeInset = view.safeAreaInsets.top
@@ -58,7 +57,6 @@ class FlightCardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        observe()
         loadData()
     }
 
@@ -96,14 +94,6 @@ class FlightCardViewController: UIViewController {
         }
     }
 
-    private func observe() {
-        scrollObserver?.invalidate()
-        scrollObserver = mainScrollView.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
-            guard let self else { return }
-            didPanOnMainScrollView(scrollView)
-        }
-    }
-
     private func layoutPageController() {
         let pageHeight = view.bounds.height - FlightCardHeaderView.height + anchoredContentOffsetY
         pageController.view.snp.updateConstraints { make in
@@ -134,30 +124,22 @@ class FlightCardViewController: UIViewController {
     }
 }
 
-// MARK: - FlightCardPageDelegate
-extension FlightCardViewController: FlightCardPageDelegate {
-    func pageViewDidPanOnScrollView(_ scrollView: UIScrollView) {
-        if !isMainScrollViewAnchored {
-            scrollView.setContentOffset(CGPoint(x: .zero, y: pageScrollViewYOffset), animated: false)
-        } else {
-            mainScrollView.setContentOffset(CGPoint(x: .zero, y: anchoredContentOffsetY), animated: false)
-        }
-        pageScrollViewYOffset = scrollView.contentOffset.y
-    }
-}
-
 extension FlightCardViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollViewTracker.trackScrollView(scrollView)
         if scrollView.contentOffset.y <= 0 {
             headerView.updateExtraHeight(abs(scrollView.contentOffset.y))
         }
+        didPanOnMainScrollView(scrollView)
     }
 
     private func didPanOnMainScrollView(_ scrollView: UIScrollView) {
         guard let currentPage else { return }
         if currentPage.tableView.contentOffset.y > 0 {
-            scrollView.setContentOffset(CGPoint(x: .zero, y: anchoredContentOffsetY), animated: false)
+            scrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
+        }
+        if scrollView.contentOffset.y > anchoredContentOffsetY && currentPage.tableView.contentOffset.y == 0 {
+            scrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
         }
     }
 }
@@ -165,6 +147,17 @@ extension FlightCardViewController: UIScrollViewDelegate {
 extension FlightCardViewController: ScrollViewTrackerDelegate {
     func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
         headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
+    }
+}
+
+// MARK: - FlightCardPageDelegate
+extension FlightCardViewController: FlightCardPageDelegate {
+    func pageViewDidPanOnScrollView(_ scrollView: UIScrollView) {
+        if !isMainScrollViewAnchored {
+            scrollView.contentOffset = .zero
+        } else {
+            mainScrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
+        }
     }
 }
 

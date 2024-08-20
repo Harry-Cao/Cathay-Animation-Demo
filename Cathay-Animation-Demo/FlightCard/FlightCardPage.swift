@@ -9,7 +9,6 @@ import UIKit
 
 class FlightCardPage: UIViewController {
     weak var delegate: FlightCardPageDelegate?
-    private var scrollObserver: NSKeyValueObservation?
     private let date: String
     private var flightModels = [FlightCardModel]()
     private var animationCache = [FlightCardModel]()
@@ -36,7 +35,6 @@ class FlightCardPage: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        observe()
         requestData()
     }
 
@@ -44,13 +42,6 @@ class FlightCardPage: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-        }
-    }
-
-    private func observe() {
-        scrollObserver?.invalidate()
-        scrollObserver = tableView.observe(\.contentOffset, options: .old) { [weak self] scrollView, _ in
-            self?.delegate?.pageViewDidPanOnScrollView(scrollView)
         }
     }
 
@@ -107,5 +98,9 @@ extension FlightCardPage: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        delegate?.pageViewDidPanOnScrollView(scrollView)
     }
 }
