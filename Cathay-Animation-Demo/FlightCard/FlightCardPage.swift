@@ -15,7 +15,10 @@ class FlightCardPage: UIViewController {
     weak var delegate: FlightCardPageDelegate?
     private let date: String
     private var flightModels = [FlightCardModel]()
-    private var animationCache = [FlightCardModel]()
+    private var displayingIndexPaths = Set<IndexPath>()
+    private var orderedDisplayingIndexPaths: [IndexPath] {
+        return displayingIndexPaths.sorted(by: { $0.row < $1.row })
+    }
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.contentInsetAdjustmentBehavior = .never
@@ -50,31 +53,21 @@ class FlightCardPage: UIViewController {
     }
 
     private func requestData() {
-        tableView.isScrollEnabled = false
         MockNetworkHelper.requestFlights(date: date) { [weak self] models in
             guard let self = self else { return }
             flightModels = models.map({ FlightCardModel(id: $0.id) })
+            view.isUserInteractionEnabled = false
             tableView.reloadData()
-            fadeInNext()
-        }
-    }
-
-    private func fadeInNext() {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
-            guard let self = self,
-                  let nextIndex = animationCache.firstIndex(where: { !$0.pop }),
-                  let cell = tableView.cellForRow(at: IndexPath(row: nextIndex, section: 0)) as? FlightCardTableViewCell else {
-                self?.tableView.isScrollEnabled = true
-                return
+            tableView.performBatchUpdates {
+                self.tableView.reloadData()
+            } completion: { _ in
+                self.fadeInNext()
             }
-            cell.fadeIn()
-            animationCache[nextIndex].pop = true
-            fadeInNext()
         }
     }
-
 }
 
+// MARK: - UITableViewDataSource
 extension FlightCardPage: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return flightModels.count
@@ -83,28 +76,57 @@ extension FlightCardPage: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let flightModel = flightModels[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
-        cell.setup(flightModel: flightModel, finishLoading: tableView.isScrollEnabled)
+        cell.setup(flightModel: flightModel, finishLoading: view.isUserInteractionEnabled)
         return cell
     }
+}
 
+// MARK: - UITableViewDelegate
+extension FlightCardPage: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard !tableView.isScrollEnabled else { return }
-        let flightModel = flightModels[indexPath.row]
-        animationCache.append(flightModel)
-    }
-}
-
-extension FlightCardPage: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         self.dismiss(animated: true)
     }
 
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        displayingIndexPaths.insert(indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        displayingIndexPaths.remove(indexPath)
+    }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         delegate?.pageViewDidPanOnScrollView(scrollView)
+    }
+}
+
+// MARK: - Animation
+extension FlightCardPage {
+    private func fadeInNext() {
+        let animationIndexPaths = orderedDisplayingIndexPaths
+        animationIndexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == animationIndexPaths.count - 1
+            let delay: Double = 0.1 * Double(index)
+            let enableUserInteraction = { [weak self] in
+                guard isLast else { return }
+                self?.view.isUserInteractionEnabled = true
+                self?.tableView.reloadData()
+            }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) { [weak self] in
+                guard let self = self,
+                      let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
+                    enableUserInteraction()
+                    return
+                }
+                cell.fadeIn {
+                    enableUserInteraction()
+                }
+            }
+        }
     }
 }

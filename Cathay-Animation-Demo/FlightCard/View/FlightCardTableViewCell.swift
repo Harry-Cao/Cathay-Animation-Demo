@@ -38,15 +38,22 @@ class FlightCardTableViewCell: UITableViewCell {
         }
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        container.alpha = 1
+    }
+
     func setup(flightModel: FlightCardModel, finishLoading: Bool) {
         container.alpha = finishLoading ? 1 : 0
         label.text = String(flightModel.id)
     }
 
-    func fadeIn() {
+    func fadeIn(completion: @escaping () -> Void) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
             container.alpha = 1
+        } completion: { _ in
+            completion()
         }
     }
 }

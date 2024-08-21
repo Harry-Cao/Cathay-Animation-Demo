@@ -77,7 +77,7 @@ class TabView: UIView {
         refresh()
     }
 
-    func refresh() {
+    private func refresh() {
         tabStackView.arrangedSubviews.forEach {
             tabStackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
