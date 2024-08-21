@@ -92,10 +92,12 @@ class TabView: UIView {
                 make.height.equalToSuperview()
             }
         }
+        layoutIfNeeded()
     }
 
     func select(index: Int) {
-        guard (0...tabStackView.arrangedSubviews.count-1).contains(index) else { return }
+        guard !tabStackView.arrangedSubviews.isEmpty,
+              (0...tabStackView.arrangedSubviews.count-1).contains(index) else { return }
         delegate?.tabView(self, didSelect: index, fromIndex: currentIndex)
         setHighlight(index: index)
         tabViewAnimateTo(index: index)
@@ -165,11 +167,12 @@ extension TabView {
         indicator.layer.removeAllAnimations()
         let toItem = tabStackView.arrangedSubviews[index]
         let toItemRect = toItem.convert(toItem.bounds, to: tabScrollView)
+        let singleAnimationDuration: TimeInterval = animationDuration / 2
 
         if currentIndex == -1 {
             indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorShortenWidth) / 2
             indicator.frame.size.width = indicatorShortenWidth
-            UIView.animate(withDuration: animationDuration / 3, delay: 0, options: .curveEaseOut) { [weak self] in
+            UIView.animate(withDuration: singleAnimationDuration, delay: 0, options: .curveEaseOut) { [weak self] in
                 guard let self = self else { return }
                 indicator.frame.origin.x = toItemRect.minX
                 indicator.frame.size.width = toItemRect.width
@@ -177,16 +180,15 @@ extension TabView {
             return
         }
 
-        guard (0...tabStackView.arrangedSubviews.count-1).contains(currentIndex) else { return }
-        let fromItem = tabStackView.arrangedSubviews[currentIndex]
-        let fromItemRect = fromItem.convert(fromItem.bounds, to: tabScrollView)
+        guard !tabStackView.arrangedSubviews.isEmpty,
+              (0...tabStackView.arrangedSubviews.count-1).contains(currentIndex) else { return }
 
-        let shortenMoveAnimator = UIViewPropertyAnimator(duration: animationDuration / 2, curve: .linear) { [weak self] in
+        let shortenMoveAnimator = UIViewPropertyAnimator(duration: singleAnimationDuration, curve: .easeIn) { [weak self] in
             guard let self = self else { return }
             indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorShortenWidth) / 2
             indicator.frame.size.width = indicatorShortenWidth
         }
-        let elongateAnimator = UIViewPropertyAnimator(duration: animationDuration / 2, curve: .easeOut) { [weak self] in
+        let elongateAnimator = UIViewPropertyAnimator(duration: singleAnimationDuration, curve: .easeOut) { [weak self] in
             guard let self = self else { return }
             indicator.frame.origin.x = toItemRect.minX
             indicator.frame.size.width = toItemRect.width
