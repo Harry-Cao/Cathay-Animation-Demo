@@ -95,7 +95,7 @@ final class BottomSheetPresentationController: UIPresentationController {
 
 // MARK: - Pan Gesture
 extension BottomSheetPresentationController {
-    @objc func didPanOnPresentedView(_ recognizer: UIPanGestureRecognizer) {
+    @objc private func didPanOnPresentedView(_ recognizer: UIPanGestureRecognizer) {
         guard shouldRespond(to: recognizer) else {
             recognizer.setTranslation(.zero, in: recognizer.view)
             return
@@ -129,7 +129,7 @@ extension BottomSheetPresentationController {
         return (scrollView.frame.contains(loc) || scrollView.isScrolling)
     }
 
-    func snap(toYPosition yPos: CGFloat) {
+    private func snap(toYPosition yPos: CGFloat) {
         BottomSheetAnimator.animate { [weak self] in
             self?.adjust(toYPosition: yPos)
         }
@@ -153,7 +153,7 @@ extension BottomSheetPresentationController: UIGestureRecognizerDelegate {
 
 // MARK: - UIScrollView Observer
 extension BottomSheetPresentationController {
-    func observe(scrollView: UIScrollView?) {
+    private func observe(scrollView: UIScrollView?) {
         scrollObserver?.invalidate()
         scrollObserver = scrollView?.observe(\.contentOffset, options: .old) { [weak self] scrollView, change in
             guard let _ = self?.containerView else { return }
@@ -161,7 +161,7 @@ extension BottomSheetPresentationController {
         }
     }
 
-    func didPanOnScrollView(_ scrollView: UIScrollView, change: NSKeyValueObservedChange<CGPoint>) {
+    private func didPanOnScrollView(_ scrollView: UIScrollView, change: NSKeyValueObservedChange<CGPoint>) {
         guard !presentedViewController.isBeingDismissed,
               !presentedViewController.isBeingPresented else { return }
         if scrollView.isScrolling && !isPresentedViewAnchored {
@@ -173,15 +173,15 @@ extension BottomSheetPresentationController {
         }
     }
 
-    func haltScrolling(_ scrollView: UIScrollView) {
+    private func haltScrolling(_ scrollView: UIScrollView) {
         scrollView.setContentOffset(CGPoint(x: 0, y: scrollViewYOffset), animated: false)
     }
 
-    func trackScrolling(_ scrollView: UIScrollView) {
+    private func trackScrolling(_ scrollView: UIScrollView) {
         scrollViewYOffset = max(scrollView.contentOffset.y, 0)
     }
 
-    func handleScrollViewTopBounce(scrollView: UIScrollView, change: NSKeyValueObservedChange<CGPoint>) {
+    private func handleScrollViewTopBounce(scrollView: UIScrollView, change: NSKeyValueObservedChange<CGPoint>) {
         guard let oldYValue = change.oldValue?.y, scrollView.isDecelerating
             else { return }
         let yOffset = scrollView.contentOffset.y
