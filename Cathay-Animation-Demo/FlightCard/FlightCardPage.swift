@@ -15,7 +15,7 @@ class FlightCardPage: UIViewController {
     weak var delegate: FlightCardPageDelegate?
     private let date: String
     private var flightModels = [FlightCardModel]()
-    private var displayingIndexPaths = Set<IndexPath>()
+    private(set) var displayingIndexPaths = Set<IndexPath>()
     private var orderedDisplayingIndexPaths: [IndexPath] {
         return displayingIndexPaths.sorted(by: { $0.row < $1.row })
     }
@@ -126,6 +126,43 @@ extension FlightCardPage {
                 cell.fadeIn {
                     enableUserInteraction()
                 }
+            }
+        }
+    }
+
+    func prepareFlyIn(direction: UIPageViewController.NavigationDirection) {
+        let animationIndexPaths = orderedDisplayingIndexPaths
+        animationIndexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == animationIndexPaths.count - 1
+            let enableUserInteraction = { [weak self] in
+                guard isLast else { return }
+                self?.view.isUserInteractionEnabled = true
+                self?.tableView.reloadData()
+            }
+            guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
+                enableUserInteraction()
+                return
+            }
+            let offset = CGFloat(40 * index) * (direction == .forward ? 1 : -1)
+            cell.prepareFlyIn(offset: offset)
+        }
+    }
+
+    func flyIn(direction: UIPageViewController.NavigationDirection) {
+        let animationIndexPaths = orderedDisplayingIndexPaths
+        animationIndexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == animationIndexPaths.count - 1
+            let enableUserInteraction = { [weak self] in
+                guard isLast else { return }
+                self?.view.isUserInteractionEnabled = true
+                self?.tableView.reloadData()
+            }
+            guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
+                enableUserInteraction()
+                return
+            }
+            cell.flyIn(duration: 0.2 + 0.05 * Double(index)) {
+                enableUserInteraction()
             }
         }
     }

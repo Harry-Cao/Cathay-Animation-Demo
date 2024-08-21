@@ -32,7 +32,16 @@ class FlightCardPageController: UIPageViewController {
                 completion: ((Bool) -> Void)? = nil) {
         guard let page = getPage(index: index) else { return }
         currentPage = page
+        let isPageLoaded: Bool = !page.displayingIndexPaths.isEmpty
+        if isPageLoaded {
+            page.prepareFlyIn(direction: direction)
+        }
         setViewControllers([page], direction: direction, animated: animated, completion: completion)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+            if isPageLoaded {
+                page.flyIn(direction: direction)
+            }
+        }
     }
 
     private func getPage(index: Int) -> FlightCardPage? {
