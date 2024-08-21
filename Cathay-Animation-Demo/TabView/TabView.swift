@@ -177,6 +177,7 @@ extension TabView {
                 indicator.frame.origin.x = toItemRect.minX
                 indicator.frame.size.width = toItemRect.width
             }
+            layoutIfNeeded()
             return
         }
 
