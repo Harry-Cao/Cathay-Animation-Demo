@@ -53,12 +53,14 @@ class FlightCardTableViewCell: UITableViewCell {
 
 // MARK: - Animation
 extension FlightCardTableViewCell {
-    func fadeIn(completion: @escaping () -> Void) {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            container.alpha = 1
-        } completion: { _ in
-            completion()
+    func fadeIn(delay: TimeInterval, completion: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let self = self else { return }
+                container.alpha = 1
+            } completion: { _ in
+                completion()
+            }
         }
     }
 

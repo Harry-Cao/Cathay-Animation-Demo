@@ -61,7 +61,7 @@ class FlightCardPage: UIViewController {
             tableView.performBatchUpdates {
                 self.tableView.reloadData()
             } completion: { _ in
-                self.fadeInNext()
+                self.fadeIn()
             }
         }
     }
@@ -107,63 +107,56 @@ extension FlightCardPage: UITableViewDelegate {
 
 // MARK: - Animation
 extension FlightCardPage {
-    private func fadeInNext() {
-        let animationIndexPaths = orderedDisplayingIndexPaths
-        animationIndexPaths.enumerated().forEach { (index, indexPath) in
-            let isLast: Bool = index == animationIndexPaths.count - 1
+    private func fadeIn() {
+        view.isUserInteractionEnabled = false
+        enumerateCells { cell, index, completion in
             let delay: Double = 0.1 * Double(index)
-            let enableUserInteraction = { [weak self] in
-                guard isLast else { return }
-                self?.view.isUserInteractionEnabled = true
-                self?.tableView.reloadData()
+            cell.fadeIn(delay: delay) {
+                completion()
             }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) { [weak self] in
-                guard let self = self,
-                      let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
-                    enableUserInteraction()
-                    return
-                }
-                cell.fadeIn {
-                    enableUserInteraction()
-                }
-            }
+        } completion: { [weak self] in
+            self?.view.isUserInteractionEnabled = true
+            self?.tableView.reloadData()
         }
+
     }
 
     func prepareFlyIn(direction: UIPageViewController.NavigationDirection) {
-        let animationIndexPaths = orderedDisplayingIndexPaths
-        animationIndexPaths.enumerated().forEach { (index, indexPath) in
-            let isLast: Bool = index == animationIndexPaths.count - 1
-            let enableUserInteraction = { [weak self] in
-                guard isLast else { return }
-                self?.view.isUserInteractionEnabled = true
-                self?.tableView.reloadData()
-            }
-            guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
-                enableUserInteraction()
-                return
-            }
-            let offset = CGFloat(40 * index) * (direction == .forward ? 1 : -1)
+        enumerateCells { cell, index, completion in
+            let offset: CGFloat = CGFloat(40 * index) * (direction == .forward ? 1 : -1)
             cell.prepareFlyIn(offset: offset)
         }
     }
 
     func flyIn(direction: UIPageViewController.NavigationDirection) {
+        view.isUserInteractionEnabled = false
+        enumerateCells { cell, index, completion in
+            let duration: TimeInterval = 0.2 + 0.05 * Double(index)
+            cell.flyIn(duration: duration) {
+                completion()
+            }
+        } completion: { [weak self] in
+            self?.view.isUserInteractionEnabled = true
+            self?.tableView.reloadData()
+        }
+    }
+
+    private func enumerateCells(action: (_ cell: FlightCardTableViewCell,
+                                         _ index: Int,
+                                         _ completion: @escaping () -> Void) -> Void,
+                                completion: (() -> Void)? = nil) {
         let animationIndexPaths = orderedDisplayingIndexPaths
         animationIndexPaths.enumerated().forEach { (index, indexPath) in
             let isLast: Bool = index == animationIndexPaths.count - 1
-            let enableUserInteraction = { [weak self] in
+            let enableUserInteraction = {
                 guard isLast else { return }
-                self?.view.isUserInteractionEnabled = true
-                self?.tableView.reloadData()
+                completion?()
             }
             guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
                 enableUserInteraction()
                 return
             }
-            cell.flyIn(duration: 0.2 + 0.05 * Double(index)) {
-                enableUserInteraction()
-            }
+            action(cell, index, enableUserInteraction)
         }
     }
 }
