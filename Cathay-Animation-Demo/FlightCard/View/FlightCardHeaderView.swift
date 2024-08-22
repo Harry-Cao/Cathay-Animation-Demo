@@ -39,10 +39,12 @@ class FlightCardHeaderView: UIView {
     func setState(_ state: HeaderState) {
         switch state {
         case .loading:
+            animationView.backButton.isHidden = true
             animationView.snp.updateConstraints { make in
                 make.height.equalTo(UIScreen.main.bounds.height)
             }
         case .normal:
+            animationView.backButton.isHidden = false
             animationView.snp.updateConstraints { make in
                 make.height.equalTo(FlightCardAnimationView.height)
             }

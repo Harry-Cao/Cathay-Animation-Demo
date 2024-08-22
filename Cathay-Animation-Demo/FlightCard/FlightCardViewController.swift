@@ -11,18 +11,17 @@ import SnapKit
 class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
     private let shortenFactor: CGFloat = 1 / 3
-    private lazy var anchoredContentOffsetY: CGFloat = {
-        let topSafeInset = view.safeAreaInsets.top
-        let offsetY = (FlightCardAnimationView.height - topSafeInset) / shortenFactor
-        return offsetY
-    }()
+    private var topSafeInset: CGFloat = 0.0
+    private var anchoredContentOffsetY: CGFloat = 0.0
     private var isMainScrollViewAnchored: Bool {
         return mainScrollView.contentOffset.y >= anchoredContentOffsetY
     }
+    private var isSetupLayout: Bool = false
 
     private lazy var headerView: FlightCardHeaderView = {
         let view = FlightCardHeaderView()
         view.dateBar.delegate = self
+        view.animationView.delegate = self
         return view
     }()
     private lazy var mainScrollView: FlightCardMainScrollView = {
@@ -53,16 +52,26 @@ class FlightCardViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // To align height of system navigationBar, we could remove if needn't align.
         navigationController?.navigationBar.setAlpha(0)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        // To align height of system navigationBar, we could remove if needn't align.
         navigationController?.navigationBar.setAlpha(1)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        // To align height of system navigationBar, we could remove if needn't align.
+        if !isSetupLayout {
+            isSetupLayout = true
+            topSafeInset = view.safeAreaInsets.top
+            anchoredContentOffsetY = (FlightCardAnimationView.height - view.safeAreaInsets.top) / shortenFactor
+            navigationController?.setNavigationBarHidden(true, animated: false)
+        }
         layoutPageController()
     }
 
@@ -136,7 +145,7 @@ extension FlightCardViewController: UIScrollViewDelegate {
 
 extension FlightCardViewController: ScrollViewTrackerDelegate {
     func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
-        headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
+        headerView.updateDismissProcess(process, minimumHeight: topSafeInset)
     }
 }
 
@@ -148,6 +157,12 @@ extension FlightCardViewController: FlightCardPageDelegate {
         } else {
             mainScrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
         }
+    }
+}
+
+extension FlightCardViewController: FlightCardAnimationViewDelegate {
+    func didTapOnBackButton() {
+        self.dismiss(animated: true)
     }
 }
 
