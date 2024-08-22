@@ -109,10 +109,10 @@ extension FlightCardPage: UITableViewDelegate {
 extension FlightCardPage {
     private func fadeIn() {
         view.isUserInteractionEnabled = false
-        enumerateCells { cell, index, completion in
+        enumerateCells { cell, index, onLast in
             let delay: Double = 0.1 * Double(index)
             cell.fadeIn(delay: delay) {
-                completion()
+                onLast()
             }
         } completion: { [weak self] in
             self?.view.isUserInteractionEnabled = true
@@ -122,7 +122,7 @@ extension FlightCardPage {
     }
 
     func prepareFlyIn(direction: UIPageViewController.NavigationDirection) {
-        enumerateCells { cell, index, completion in
+        enumerateCells { cell, index, _ in
             let offset: CGFloat = CGFloat(40 * index) * (direction == .forward ? 1 : -1)
             cell.prepareFlyIn(offset: offset)
         }
@@ -130,10 +130,10 @@ extension FlightCardPage {
 
     func flyIn(direction: UIPageViewController.NavigationDirection) {
         view.isUserInteractionEnabled = false
-        enumerateCells { cell, index, completion in
+        enumerateCells { cell, index, onLast in
             let duration: TimeInterval = 0.2 + 0.05 * Double(index)
             cell.flyIn(duration: duration) {
-                completion()
+                onLast()
             }
         } completion: { [weak self] in
             self?.view.isUserInteractionEnabled = true
@@ -141,22 +141,23 @@ extension FlightCardPage {
         }
     }
 
-    private func enumerateCells(action: (_ cell: FlightCardTableViewCell,
+    private func enumerateCells(animate: (_ cell: FlightCardTableViewCell,
                                          _ index: Int,
-                                         _ completion: @escaping () -> Void) -> Void,
+                                         _ onLast: @escaping () -> Void) -> Void,
                                 completion: (() -> Void)? = nil) {
         let animationIndexPaths = orderedDisplayingIndexPaths
         animationIndexPaths.enumerated().forEach { (index, indexPath) in
             let isLast: Bool = index == animationIndexPaths.count - 1
-            let enableUserInteraction = {
+            let onLast = {
                 guard isLast else { return }
                 completion?()
             }
             guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
-                enableUserInteraction()
+                onLast()
                 return
             }
-            action(cell, index, enableUserInteraction)
+            cell.layer.removeAllAnimations()
+            animate(cell, index, onLast)
         }
     }
 }

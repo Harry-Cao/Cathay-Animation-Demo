@@ -37,7 +37,7 @@ class FlightCardPageController: UIPageViewController {
             page.prepareFlyIn(direction: direction)
         }
         setViewControllers([page], direction: direction, animated: animated, completion: completion)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.2) {
             if isPageLoaded {
                 page.flyIn(direction: direction)
             }
