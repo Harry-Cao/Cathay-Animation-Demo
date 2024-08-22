@@ -14,7 +14,7 @@ class FlightCardViewController: UIViewController {
     private var topSafeInset: CGFloat = 0.0
     private var anchoredContentOffsetY: CGFloat = 0.0
     private var isMainScrollViewAnchored: Bool {
-        return mainScrollView.contentOffset.y >= anchoredContentOffsetY
+        return mainScrollView.contentOffset.y.rounded() >= anchoredContentOffsetY.rounded()
     }
     private var isSetupLayout: Bool = false
 
@@ -35,7 +35,7 @@ class FlightCardViewController: UIViewController {
     }()
     private lazy var scrollViewTracker: ScrollViewTracker = {
         let tracker = ScrollViewTracker()
-        tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: shortenFactor)
+        tracker.setTransform(startOffset: 0.0, endOffset: topSafeInset, factor: shortenFactor)
         tracker.delegate = self
         return tracker
     }()
@@ -69,7 +69,7 @@ class FlightCardViewController: UIViewController {
         if !isSetupLayout {
             isSetupLayout = true
             topSafeInset = view.safeAreaInsets.top
-            anchoredContentOffsetY = (FlightCardAnimationView.height - view.safeAreaInsets.top) / shortenFactor
+            anchoredContentOffsetY = view.safeAreaInsets.top / shortenFactor
             navigationController?.setNavigationBarHidden(true, animated: false)
         }
         layoutPageController()
@@ -110,6 +110,7 @@ class FlightCardViewController: UIViewController {
                 self.headerView.setState(.normal)
             } completion: { _ in
                 self.view.isUserInteractionEnabled = true
+                self.headerView.animationView.backButton.isHidden = false
                 self.headerView.dateBar.setTabs(data.map({ TabModel(title: "\($0.date) flights: \($0.flights.count)") }))
                 self.pageController.pages = data.map({
                     let page = FlightCardPage(date: $0.date)
