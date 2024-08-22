@@ -32,7 +32,7 @@ class FlightCardAnimationView: UIView {
         let image = UIImage(systemName: "arrowshape.turn.up.backward.fill")
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-        button.tintColor = .label
+        button.tintColor = .systemBackground
         return button
     }()
 
@@ -58,10 +58,13 @@ class FlightCardAnimationView: UIView {
             make.leading.equalToSuperview().inset(10)
             make.size.equalTo(44)
         }
+        updateDismissProcess(0)
     }
 
     func updateDismissProcess(_ process: CGFloat) {
         viewMask.alpha = process
+        let colorValue = 1 - process
+        backButton.tintColor = UIColor(red: colorValue, green: colorValue, blue: colorValue, alpha: 1)
     }
 
     @objc private func didTapBackButton() {
