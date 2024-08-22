@@ -75,7 +75,9 @@ extension FlightCardPage: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let flightModel = flightModels[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as? FlightCardTableViewCell else {
+            fatalError("TableView only support FlightCardTableViewCell")
+        }
         cell.setup(flightModel: flightModel, finishLoading: view.isUserInteractionEnabled)
         return cell
     }
@@ -109,20 +111,19 @@ extension FlightCardPage: UITableViewDelegate {
 extension FlightCardPage {
     private func fadeIn() {
         view.isUserInteractionEnabled = false
-        enumerateCells { cell, index, onLast in
+        enumerateDisplayingCells { [weak self] cell, index, isLast in
             let delay: Double = 0.1 * Double(index)
             cell.fadeIn(delay: delay) {
-                onLast()
+                if isLast {
+                    self?.view.isUserInteractionEnabled = true
+                    self?.tableView.reloadData()
+                }
             }
-        } completion: { [weak self] in
-            self?.view.isUserInteractionEnabled = true
-            self?.tableView.reloadData()
         }
-
     }
 
     func prepareFlyIn(direction: UIPageViewController.NavigationDirection) {
-        enumerateCells { cell, index, _ in
+        enumerateDisplayingCells { cell, index, _ in
             let offset: CGFloat = CGFloat(40 * index) * (direction == .forward ? 1 : -1)
             cell.prepareFlyIn(offset: offset)
         }
@@ -130,34 +131,28 @@ extension FlightCardPage {
 
     func flyIn(direction: UIPageViewController.NavigationDirection) {
         view.isUserInteractionEnabled = false
-        enumerateCells { cell, index, onLast in
+        enumerateDisplayingCells { [weak self] cell, index, isLast in
             let duration: TimeInterval = 0.2 + 0.05 * Double(index)
             cell.flyIn(duration: duration) {
-                onLast()
+                if isLast {
+                    self?.view.isUserInteractionEnabled = true
+                    self?.tableView.reloadData()
+                }
             }
-        } completion: { [weak self] in
-            self?.view.isUserInteractionEnabled = true
-            self?.tableView.reloadData()
         }
     }
 
-    private func enumerateCells(animate: (_ cell: FlightCardTableViewCell,
-                                         _ index: Int,
-                                         _ onLast: @escaping () -> Void) -> Void,
-                                completion: (() -> Void)? = nil) {
+    private func enumerateDisplayingCells(animate: @escaping (_ cell: FlightCardTableViewCell,
+                                                    _ index: Int,
+                                                    _ isLast: Bool) -> Void) {
         let animationIndexPaths = orderedDisplayingIndexPaths
         animationIndexPaths.enumerated().forEach { (index, indexPath) in
             let isLast: Bool = index == animationIndexPaths.count - 1
-            let onLast = {
-                guard isLast else { return }
-                completion?()
-            }
             guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
-                onLast()
-                return
+                fatalError("TableView only support FlightCardTableViewCell")
             }
             cell.layer.removeAllAnimations()
-            animate(cell, index, onLast)
+            animate(cell, index, isLast)
         }
     }
 }
