@@ -16,7 +16,7 @@ class FlightCardPage: UIViewController {
     private let date: String
     private var flightModels = [FlightCardModel]()
     private(set) var displayingIndexPaths = Set<IndexPath>()
-    private var orderedDisplayingIndexPaths: [IndexPath] {
+    private var sortedDisplayingIndexPaths: [IndexPath] {
         return displayingIndexPaths.sorted(by: { $0.row < $1.row })
     }
     lazy var tableView: UITableView = {
@@ -142,12 +142,12 @@ extension FlightCardPage {
         }
     }
 
-    private func enumerateDisplayingCells(animate: @escaping (_ cell: FlightCardTableViewCell,
+    private func enumerateDisplayingCells(animate: (_ cell: FlightCardTableViewCell,
                                                     _ index: Int,
                                                     _ isLast: Bool) -> Void) {
-        let animationIndexPaths = orderedDisplayingIndexPaths
-        animationIndexPaths.enumerated().forEach { (index, indexPath) in
-            let isLast: Bool = index == animationIndexPaths.count - 1
+        let indexPaths = sortedDisplayingIndexPaths
+        indexPaths.enumerated().forEach { (index, indexPath) in
+            let isLast: Bool = index == indexPaths.count - 1
             guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
                 fatalError("TableView only support FlightCardTableViewCell")
             }
