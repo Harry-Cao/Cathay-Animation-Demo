@@ -30,14 +30,12 @@ class FlightCardTableViewCell: UITableViewCell {
     private func setupUI() {
         contentView.addSubview(container)
         [label].forEach(container.addSubview)
+        container.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(20)
+        }
         label.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        container.frame = CGRect(x: 20, y: 20, width: contentView.bounds.width - 40, height: contentView.bounds.height - 40)
     }
 
     override func prepareForReuse() {
@@ -66,7 +64,7 @@ extension FlightCardTableViewCell {
 
     func prepareFlyIn(offset: CGFloat) {
         container.layer.removeAllAnimations()
-        container.frame.origin.x = 20 + offset
+        container.transform = CGAffineTransform(translationX: offset, y: .zero)
         layoutIfNeeded()
     }
 
@@ -74,7 +72,7 @@ extension FlightCardTableViewCell {
         container.layer.removeAllAnimations()
         UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut) { [weak self] in
             guard let self = self else { return }
-            container.frame.origin.x = 20
+            container.transform = CGAffineTransform(translationX: .zero, y: .zero)
         } completion: { _ in
             completion()
         }
