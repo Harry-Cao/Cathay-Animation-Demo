@@ -7,16 +7,11 @@
 
 import Foundation
 
-enum SwitchDirection {
-    case left
-    case right
-}
-
 final class FlightCardModel {
-    var num: Int?
+    let id: Int
     var pop: Bool = false
 
-    init(num: Int? = nil) {
-        self.num = num
+    init(id: Int) {
+        self.id = id
     }
 }

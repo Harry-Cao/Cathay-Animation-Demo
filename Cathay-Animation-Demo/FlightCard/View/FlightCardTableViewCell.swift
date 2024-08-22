@@ -9,11 +9,14 @@ import UIKit
 import SnapKit
 
 class FlightCardTableViewCell: UITableViewCell {
-    static let height: CGFloat = 100.0
-    private var currentModel: FlightCardModel?
-    private var showingCard = FlightCardView()
-    private var standByCard = FlightCardView()
-    private var cards: [FlightCardView] { [showingCard, standByCard] }
+    private let container: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blue
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 12
+        return view
+    }()
+    private let label = UILabel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -25,71 +28,54 @@ class FlightCardTableViewCell: UITableViewCell {
     }
 
     private func setupUI() {
-        [showingCard, standByCard].forEach(contentView.addSubview)
-        showingCard.snp.makeConstraints { make in
-            make.size.equalToSuperview().inset(20)
-            make.centerX.centerY.equalToSuperview()
+        contentView.addSubview(container)
+        [label].forEach(container.addSubview)
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
-        standByCard.snp.makeConstraints { make in
-            make.size.equalToSuperview().inset(20)
-            make.centerY.equalToSuperview()
-            make.centerX.equalToSuperview().offset(UIScreen.main.bounds.width)
-        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        container.frame = CGRect(x: 20, y: 20, width: contentView.bounds.width - 40, height: contentView.bounds.height - 40)
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        cards.forEach { $0.alpha = 0 }
+        container.alpha = 1
     }
 
-    func setup(model: FlightCardModel?, finishLoading: Bool) {
-        currentModel = model
-        if !finishLoading || model == nil {
-            cards.forEach { $0.alpha = 0 }
-        } else {
-            cards.forEach { $0.alpha = 1 }
-        }
+    func setup(flightModel: FlightCardModel, finishLoading: Bool) {
+        container.alpha = finishLoading ? 1 : 0
+        label.text = String(flightModel.id)
     }
 }
 
-// MARK: - Animations
+// MARK: - Animation
 extension FlightCardTableViewCell {
-    func fadeIn(completion: @escaping () -> Void) {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            guard let self = self else { return }
-            cards.forEach { $0.alpha = 1 }
-        } completion: { _ in
-            completion()
+    func fadeIn(delay: TimeInterval, completion: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let self = self else { return }
+                container.alpha = 1
+            } completion: { _ in
+                completion()
+            }
         }
     }
 
-    func switchTo(model toModel: FlightCardModel?,
-                  direction: SwitchDirection,
-                  extraDuration: TimeInterval,
-                  completion: @escaping () -> Void)
-    {
-        let offsetX = direction == .left ? -UIScreen.main.bounds.width : UIScreen.main.bounds.width
-        // handle out
-        UIView.animate(withDuration: 0.3) { [self] in
-            showingCard.snp.updateConstraints { make in
-                make.centerX.equalToSuperview().offset(offsetX)
-            }
-            layoutIfNeeded()
-        }
-        // handle in
-        standByCard.snp.updateConstraints { make in
-            make.centerX.equalToSuperview().offset(-offsetX)
-        }
+    func prepareFlyIn(offset: CGFloat) {
+        container.layer.removeAllAnimations()
+        container.frame.origin.x = 20 + offset
         layoutIfNeeded()
-        standByCard.alpha = toModel == nil ? 0 : 1
-        UIView.animate(withDuration: 0.3 + extraDuration, animations: { [self] in
-            standByCard.snp.updateConstraints { make in
-                make.centerX.equalToSuperview()
-            }
-            layoutIfNeeded()
-        }) { [self] _ in
-            // exchange these cards
-            (showingCard, standByCard) = (standByCard, showingCard)
+    }
+
+    func flyIn(duration: TimeInterval, completion: @escaping () -> Void) {
+        container.layer.removeAllAnimations()
+        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut) { [weak self] in
+            guard let self = self else { return }
+            container.frame.origin.x = 20
+        } completion: { _ in
             completion()
         }
     }

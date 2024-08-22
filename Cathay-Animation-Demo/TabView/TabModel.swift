@@ -8,10 +8,15 @@
 import Foundation
 
 class TabModel {
-    let title: String
-    let date: String = UUID().uuidString
+    var title: String?
 
-    init(title: String) {
+    init(title: String? = nil) {
         self.title = title
+    }
+}
+
+extension TabModel {
+    static var loading: TabModel {
+        return TabModel()
     }
 }

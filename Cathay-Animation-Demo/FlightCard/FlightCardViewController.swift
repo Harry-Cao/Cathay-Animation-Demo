@@ -10,45 +10,45 @@ import SnapKit
 
 class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
-    private var dataSource = [Int: [FlightCardModel]]()
-    private var tabs = [TabModel]()
-    private var displayingIndexPaths = Set<IndexPath>()
-    private let emptyHeaderView: UIView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: .zero, height: FlightCardHeaderView.height)))
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        emptyHeaderView.isUserInteractionEnabled = false
-        tableView.tableHeaderView = emptyHeaderView
-        tableView.contentInsetAdjustmentBehavior = .never
-        tableView.sectionHeaderTopPadding = .zero
-        tableView.showsVerticalScrollIndicator = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(FlightCardTableViewCell.self, forCellReuseIdentifier: "\(FlightCardTableViewCell.self)")
-        return tableView
+    private let shortenFactor: CGFloat = 1 / 3
+    private lazy var anchoredContentOffsetY: CGFloat = {
+        let topSafeInset = view.safeAreaInsets.top
+        let offsetY = (FlightCardAnimationView.height - topSafeInset) / shortenFactor
+        return offsetY
     }()
+    private var isMainScrollViewAnchored: Bool {
+        return mainScrollView.contentOffset.y >= anchoredContentOffsetY
+    }
+
     private lazy var headerView: FlightCardHeaderView = {
         let view = FlightCardHeaderView()
         view.dateBar.delegate = self
         return view
     }()
+    private lazy var mainScrollView: FlightCardMainScrollView = {
+        let view = FlightCardMainScrollView()
+        view.showsVerticalScrollIndicator = false
+        view.showsHorizontalScrollIndicator = false
+        view.contentInsetAdjustmentBehavior = .never
+        view.delegate = self
+        view.gestureDelegate = self
+        return view
+    }()
     private lazy var scrollViewTracker: ScrollViewTracker = {
         let tracker = ScrollViewTracker()
-        tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: 1 / 3)
+        tracker.setTransform(startOffset: 0.0, endOffset: view.safeAreaInsets.top, factor: shortenFactor)
         tracker.delegate = self
         return tracker
     }()
-    private var minimumCellNum: Int {
-        return Int(ceil((UIScreen.main.bounds.height - FlightCardHeaderView.height) / FlightCardTableViewCell.height))
-    }
-    private var orderedDisplayingIndexPaths: [IndexPath] {
-        return displayingIndexPaths.sorted(by: { $0.row < $1.row })
+    private let pageController = FlightCardPageController()
+    private var currentPage: FlightCardPage? {
+        return pageController.currentPage
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupDateBar()
-        requestData()
+        loadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -61,185 +61,110 @@ class FlightCardViewController: UIViewController {
         navigationController?.navigationBar.setAlpha(1)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layoutPageController()
+    }
+
     private func setupUI() {
-        view.addSubview(tableView)
-        tableView.addSubview(headerView)
-        tableView.snp.makeConstraints { make in
+        view.backgroundColor = .systemBackground
+        view.addSubview(mainScrollView)
+        addChild(pageController)
+        [pageController.view, headerView].forEach(mainScrollView.addSubview)
+        mainScrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        pageController.view.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(FlightCardHeaderView.height)
+            make.leading.bottom.trailing.equalToSuperview()
+            make.height.equalTo(0)
+            make.width.equalTo(view)
         }
         headerView.snp.makeConstraints { make in
             make.leading.top.trailing.equalTo(view)
         }
     }
 
-    private func setupDateBar() {
-        tabs = [
-            TabModel(title: "Tab1"),
-            TabModel(title: "Tab2"),
-            TabModel(title: "Tab3"),
-            TabModel(title: "Tab4"),
-            TabModel(title: "Tab5"),
-            TabModel(title: "Tab6"),
-            TabModel(title: "Tab7"),
-        ]
-        headerView.dateBar.setTabs(tabs)
+    private func layoutPageController() {
+        let pageHeight = view.bounds.height - FlightCardHeaderView.height + anchoredContentOffsetY
+        pageController.view.snp.updateConstraints { make in
+            make.height.equalTo(pageHeight)
+        }
     }
 
-    private func requestData() {
+    private func loadData() {
         view.isUserInteractionEnabled = false
         headerView.setState(.loading)
-        MockNetworkHelper.mockRequestData(date: "") { [weak self] data in
+        MockNetworkHelper.requestData { [weak self] data in
             guard let self = self else { return }
-            dataSource[currentIndex] = data.map{ FlightCardModel(num: $0) }
-            self.tableView.reloadData()
             UIView.animate(withDuration: 0.3) {
                 self.headerView.setState(.normal)
             } completion: { _ in
+                self.view.isUserInteractionEnabled = true
+                self.headerView.dateBar.setTabs(data.map({ TabModel(title: "\($0.date) flights: \($0.flights.count)") }))
+                self.pageController.pages = data.map({
+                    let page = FlightCardPage(date: $0.date)
+                    page.delegate = self
+                    return page
+                })
                 self.headerView.dateBar.select(index: self.currentIndex)
-                self.startFadeIn()
-            }
-        }
-    }
-
-    private func requestData(date: String) {
-        MockNetworkHelper.mockRequestData(date: date) { [weak self] data in
-            guard let self = self,
-                  let index = tabs.firstIndex(where: { $0.date == date }) else { return }
-            dataSource[index] = data.map{ FlightCardModel(num: $0) }
-            if currentIndex == index {
-                view.isUserInteractionEnabled = false
-                tableView.reloadData()
-                tableView.performBatchUpdates {
-                    self.tableView.reloadData()
-                } completion: { _ in
-                    self.startFadeIn()
-                }
+                self.pageController.select(index: self.currentIndex, direction: .forward)
             }
         }
     }
 }
 
-// MARK: - UITableViewDataSource
-extension FlightCardViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // prevent from animation error
-        return max(minimumCellNum, dataSource[currentIndex]?.count ?? 0)
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let model = getModelFrom(tabIndex: currentIndex, rowIndex: indexPath.row)
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as! FlightCardTableViewCell
-        cell.setup(model: model, finishLoading: view.isUserInteractionEnabled)
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return FlightCardTableViewCell.height
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        displayingIndexPaths.insert(indexPath)
-    }
-
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        displayingIndexPaths.remove(indexPath)
-    }
-
-    private func getModelFrom(tabIndex: Int, rowIndex: Int) -> FlightCardModel? {
-        guard let data = dataSource[tabIndex],
-              !data.isEmpty,
-              (0...max(0, data.count-1)).contains(rowIndex) else { return nil }
-        return data[rowIndex]
-    }
-}
-
-extension FlightCardViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        self.dismiss(animated: true)
-    }
-
+extension FlightCardViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollViewTracker.trackScrollView(scrollView)
         if scrollView.contentOffset.y <= 0 {
             headerView.updateExtraHeight(abs(scrollView.contentOffset.y))
         }
+        didPanOnMainScrollView(scrollView)
+    }
+
+    private func didPanOnMainScrollView(_ scrollView: UIScrollView) {
+        guard let currentPage else { return }
+        if currentPage.tableView.contentOffset.y > 0 {
+            scrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
+        }
+        if isMainScrollViewAnchored && currentPage.tableView.contentOffset.y == 0 {
+            scrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
+        }
     }
 }
 
-// MARK: - ScrollViewTrackerDelegate
 extension FlightCardViewController: ScrollViewTrackerDelegate {
     func tracker(_ tracker: ScrollViewTracker, onScroll process: CGFloat) {
         headerView.updateDismissProcess(process, minimumHeight: view.safeAreaInsets.top)
     }
 }
 
-// MARK: - TabViewDelegate
-extension FlightCardViewController: TabViewDelegate {
-    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
-        guard fromIndex != -1 else { return }
-        // need action before update index
-        if toIndex != fromIndex {
-            switchTo(index: toIndex, direction: toIndex > fromIndex ? .left : .right)
-        }
-        currentIndex = toIndex
-        // need action after update index
-        if dataSource[toIndex] == nil {
-            tableView.setContentOffset(.zero, animated: true)
-            requestData(date: tabs[toIndex].date)
+// MARK: - FlightCardPageDelegate
+extension FlightCardViewController: FlightCardPageDelegate {
+    func pageViewDidPanOnScrollView(_ scrollView: UIScrollView) {
+        if !isMainScrollViewAnchored {
+            scrollView.contentOffset = .zero
+        } else {
+            mainScrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)
         }
     }
 }
 
-// MARK: - Animations
-extension FlightCardViewController {
-    private func startFadeIn() {
-        view.isUserInteractionEnabled = false
-        let animationIndexPaths = orderedDisplayingIndexPaths.filter({
-            return getModelFrom(tabIndex: currentIndex, rowIndex: $0.row) != nil
-        })
-        animationIndexPaths.enumerated().forEach { (index, indexPath) in
-            let isLast: Bool = index == animationIndexPaths.count - 1
-            let delay: Double = 0.1 * Double(index)
-            let enableUserInteraction = { [weak self] in
-                guard isLast else { return }
-                self?.view.isUserInteractionEnabled = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) { [weak self] in
-                guard let self = self,
-                      let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
-                    enableUserInteraction()
-                    return
-                }
-                cell.fadeIn {
-                    enableUserInteraction()
-                }
-            }
-        }
+extension FlightCardViewController: TabViewDelegate {
+    func tabView(_ tabView: TabView, didSelect toIndex: Int, fromIndex: Int) {
+        guard currentIndex != toIndex else { return }
+        currentPage?.tableView.setContentOffset(.zero, animated: true)
+        mainScrollView.setContentOffset(.zero, animated: true)
+        let direction: UIPageViewController.NavigationDirection = toIndex > currentIndex ? .forward : .reverse
+        pageController.select(index: toIndex, direction: direction)
+        currentIndex = toIndex
     }
+}
 
-    private func switchTo(index: Int, direction: SwitchDirection) {
-        view.isUserInteractionEnabled = false
-        let animationIndexPaths = orderedDisplayingIndexPaths.filter {
-            return getModelFrom(tabIndex: currentIndex, rowIndex: $0.row) != nil
-            || getModelFrom(tabIndex: index, rowIndex: $0.row) != nil
-        }
-        animationIndexPaths.enumerated().forEach { (itemIndex, indexPath) in
-            let isLast: Bool = itemIndex == animationIndexPaths.count - 1
-            let enableUserInteraction = { [weak self] in
-                guard isLast else { return }
-                self?.view.isUserInteractionEnabled = true
-                self?.tableView.reloadData()
-                self?.tableView.setContentOffset(.zero, animated: true)
-            }
-            guard let cell = tableView.cellForRow(at: indexPath) as? FlightCardTableViewCell else {
-                enableUserInteraction()
-                return
-            }
-            let model = getModelFrom(tabIndex: index, rowIndex: indexPath.row)
-            cell.switchTo(model: model, direction: direction, extraDuration: 0.1 * Double(itemIndex)) {
-                enableUserInteraction()
-            }
-        }
+// MARK: - FlightCardMainScrollViewGestureDelegate
+extension FlightCardViewController: FlightCardMainScrollViewGestureDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return otherGestureRecognizer.view == currentPage?.tableView
     }
 }

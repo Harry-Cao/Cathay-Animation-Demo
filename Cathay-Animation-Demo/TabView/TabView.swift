@@ -12,11 +12,19 @@ class TabView: UIView {
     weak var delegate: TabViewDelegate?
     static let height: CGFloat = 68.0
     private(set) var currentIndex: Int = -1
-    private let spacing: CGFloat = 20.0
+    private let spacing: CGFloat = 0.0
     private let indicatorShortenWidth: CGFloat = 40.0
     private let indicatorHeight: CGFloat = 2.0
     private let animationDuration: TimeInterval = 0.5
-    private var dataSource = [TabModel]()
+    private var dataSource: [TabModel] = [
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+        TabModel.loading,
+    ]
     private lazy var tabScrollView: UIScrollView = {
         let view = UIScrollView()
         view.showsHorizontalScrollIndicator = false
@@ -64,6 +72,11 @@ class TabView: UIView {
         indicator.frame = CGRect(x: 0, y: TabView.height - indicatorHeight, width: 0, height: indicatorHeight)
     }
 
+    func setTabs(_ tabs: [TabModel]) {
+        dataSource = tabs
+        refresh()
+    }
+
     private func refresh() {
         tabStackView.arrangedSubviews.forEach {
             tabStackView.removeArrangedSubview($0)
@@ -79,15 +92,12 @@ class TabView: UIView {
                 make.height.equalToSuperview()
             }
         }
-    }
-
-    func setTabs(_ tabs: [TabModel]) {
-        dataSource = tabs
-        refresh()
+        layoutIfNeeded()
     }
 
     func select(index: Int) {
-        guard (0...tabStackView.arrangedSubviews.count-1).contains(index) else { return }
+        guard !tabStackView.arrangedSubviews.isEmpty,
+              (0...tabStackView.arrangedSubviews.count-1).contains(index) else { return }
         delegate?.tabView(self, didSelect: index, fromIndex: currentIndex)
         setHighlight(index: index)
         tabViewAnimateTo(index: index)
@@ -171,9 +181,10 @@ extension TabView {
             return
         }
 
-        guard (0...tabStackView.arrangedSubviews.count-1).contains(currentIndex) else { return }
+        guard !tabStackView.arrangedSubviews.isEmpty,
+              (0...tabStackView.arrangedSubviews.count-1).contains(currentIndex) else { return }
 
-        let moveAnimator = UIViewPropertyAnimator(duration: singleAnimationDuration, curve: .linear) { [weak self] in
+        let shortenMoveAnimator = UIViewPropertyAnimator(duration: singleAnimationDuration, curve: .easeIn) { [weak self] in
             guard let self = self else { return }
             indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorShortenWidth) / 2
             indicator.frame.size.width = indicatorShortenWidth
@@ -183,9 +194,9 @@ extension TabView {
             indicator.frame.origin.x = toItemRect.minX
             indicator.frame.size.width = toItemRect.width
         }
-        moveAnimator.addCompletion { _ in
+        shortenMoveAnimator.addCompletion { _ in
             elongateAnimator.startAnimation()
         }
-        moveAnimator.startAnimation()
+        shortenMoveAnimator.startAnimation()
     }
 }
