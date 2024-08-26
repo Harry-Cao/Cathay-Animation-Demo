@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
@@ -17,6 +18,8 @@ class FlightCardViewController: UIViewController {
         return mainScrollView.contentOffset.y.rounded() >= anchoredContentOffsetY.rounded()
     }
     private var isSetupLayout: Bool = false
+    private let viewModel = FlightCardViewModel()
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var headerView: FlightCardHeaderView = {
         let view = FlightCardHeaderView()
@@ -47,6 +50,7 @@ class FlightCardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        bindData()
         loadData()
     }
 
@@ -94,6 +98,12 @@ class FlightCardViewController: UIViewController {
         }
     }
 
+    private func bindData() {
+        viewModel.$isAnimating.sink { [weak self] isAnimating in
+            self?.view.isUserInteractionEnabled = !isAnimating
+        }.store(in: &cancellables)
+    }
+
     private func layoutPageController() {
         let pageHeight = view.bounds.height - FlightCardHeaderView.height + anchoredContentOffsetY
         pageController.view.snp.updateConstraints { make in
@@ -102,18 +112,18 @@ class FlightCardViewController: UIViewController {
     }
 
     private func loadData() {
-        view.isUserInteractionEnabled = false
         headerView.setState(.loading)
+        viewModel.isAnimating = true
         MockNetworkHelper.requestData { [weak self] data in
             guard let self = self else { return }
             UIView.animate(withDuration: 0.3) {
                 self.headerView.setState(.normal)
             } completion: { _ in
-                self.view.isUserInteractionEnabled = true
+                self.viewModel.isAnimating = false
                 self.headerView.animationView.backButton.isHidden = false
                 self.headerView.dateBar.setTabs(data.map({ TabModel(title: "\($0.date) flights: \($0.flights.count)") }))
                 self.pageController.pages = data.map({
-                    let page = FlightCardPage(date: $0.date)
+                    let page = FlightCardPage(date: $0.date, viewModel: self.viewModel)
                     page.delegate = self
                     return page
                 })
@@ -130,10 +140,10 @@ extension FlightCardViewController: UIScrollViewDelegate {
         if scrollView.contentOffset.y <= 0 {
             headerView.updateExtraHeight(abs(scrollView.contentOffset.y))
         }
-        didPanOnMainScrollView(scrollView)
+        handleScrolling(scrollView)
     }
 
-    private func didPanOnMainScrollView(_ scrollView: UIScrollView) {
+    private func handleScrolling(_ scrollView: UIScrollView) {
         guard let currentPage else { return }
         if currentPage.tableView.contentOffset.y > 0 {
             scrollView.contentOffset = CGPoint(x: .zero, y: anchoredContentOffsetY)

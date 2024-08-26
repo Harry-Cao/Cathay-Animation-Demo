@@ -24,6 +24,7 @@
 		3EBD78132C4EA5620069F583 /* FlightCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78122C4EA5620069F583 /* FlightCardViewController.swift */; };
 		3EBD78152C4EBEE30069F583 /* FlightCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBD78142C4EBEE30069F583 /* FlightCardTableViewCell.swift */; };
 		3EFF87EB2C5BE66600A97941 /* FlightCardAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFF87EA2C5BE66600A97941 /* FlightCardAnimationView.swift */; };
+		7B0A229B2C7C52E500A8CC2C /* FlightCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0A229A2C7C52E500A8CC2C /* FlightCardViewModel.swift */; };
 		7B1CC3D52C5B9B940019F9B4 /* FlightCardHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1CC3D42C5B9B940019F9B4 /* FlightCardHeaderView.swift */; };
 		7B1FDA942C634E260025F717 /* FlightCardPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1FDA932C634E260025F717 /* FlightCardPage.swift */; };
 		7B27F5F62C578FD6000808DF /* TabModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B27F5F52C578FD6000808DF /* TabModel.swift */; };
@@ -75,6 +76,7 @@
 		3EBD78142C4EBEE30069F583 /* FlightCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardTableViewCell.swift; sourceTree = "<group>"; };
 		3EFF87EA2C5BE66600A97941 /* FlightCardAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardAnimationView.swift; sourceTree = "<group>"; };
 		73484422887A58C087246698 /* Pods-Cathay-Animation-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cathay-Animation-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Cathay-Animation-Demo/Pods-Cathay-Animation-Demo.debug.xcconfig"; sourceTree = "<group>"; };
+		7B0A229A2C7C52E500A8CC2C /* FlightCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardViewModel.swift; sourceTree = "<group>"; };
 		7B1CC3D42C5B9B940019F9B4 /* FlightCardHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightCardHeaderView.swift; sourceTree = "<group>"; };
 		7B1FDA932C634E260025F717 /* FlightCardPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightCardPage.swift; sourceTree = "<group>"; };
 		7B27F5F52C578FD6000808DF /* TabModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabModel.swift; sourceTree = "<group>"; };
@@ -195,6 +197,14 @@
 			path = "Cathay-Animation-Demo";
 			sourceTree = "<group>";
 		};
+		7B0A229C2C7C54D200A8CC2C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				7B0A229A2C7C52E500A8CC2C /* FlightCardViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		7B27F5F42C576A05000808DF /* TabView */ = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +290,7 @@
 				3EBD78122C4EA5620069F583 /* FlightCardViewController.swift */,
 				7B3473A62C634D0A001CBC8B /* FlightCardPageController.swift */,
 				7B1FDA932C634E260025F717 /* FlightCardPage.swift */,
+				7B0A229C2C7C54D200A8CC2C /* ViewModel */,
 				7B7094FE2C5C843E00D9B3FA /* View */,
 				7B7094FF2C5C844400D9B3FA /* Model */,
 			);
@@ -464,6 +475,7 @@
 				3E07D3132C5AA3A7009B346C /* BottomSheetPresentable+Layout.swift in Sources */,
 				3E05B8862C7382680027FBB3 /* FlightCardMainScrollView.swift in Sources */,
 				3EBD78152C4EBEE30069F583 /* FlightCardTableViewCell.swift in Sources */,
+				7B0A229B2C7C52E500A8CC2C /* FlightCardViewModel.swift in Sources */,
 				7BF922F72C4FBFD6009CC71D /* FlightCardModel.swift in Sources */,
 				3E91BF8F2C56A3FB0053177B /* PanContainerView.swift in Sources */,
 				7BF63CFA2C6346FA002CD8A6 /* FlightModel.swift in Sources */,
