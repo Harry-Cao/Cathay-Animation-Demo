@@ -100,8 +100,7 @@ class TabView: UIView {
               (0...tabStackView.arrangedSubviews.count-1).contains(index) else { return }
         delegate?.tabView(self, didSelect: index, fromIndex: currentIndex)
         setHighlight(index: index)
-        tabViewAnimateTo(index: index)
-        indicatorAnimateTo(index: index)
+        animateTo(index: index)
         currentIndex = index
     }
 
@@ -144,26 +143,7 @@ extension TabView: UIScrollViewDelegate {
 
 // MARK: - Animation
 extension TabView {
-    private func tabViewAnimateTo(index: Int) {
-        let item = tabStackView.arrangedSubviews[index]
-        let itemRect = item.convert(item.bounds, to: self)
-        let horizontalOffsetX = horizontalOffsetToMiddle(rect: itemRect, to: self)
-        let targetOffsetX = tabScrollView.contentOffset.x + horizontalOffsetX
-        let contentOffsetX = max(0, min(targetOffsetX, tabScrollView.contentSize.width - self.frame.width))
-
-        UIView.animate(withDuration: animationDuration,
-                       delay: 0,
-                       options: [.allowUserInteraction, .beginFromCurrentState, .curveEaseInOut]) { [self] in
-            tabScrollView.contentOffset.x = contentOffsetX
-        }
-    }
-
-    private func horizontalOffsetToMiddle(rect: CGRect, to view: UIView) -> CGFloat {
-        let middleX = (view.frame.width - rect.width) / 2
-        return rect.minX - middleX
-    }
-
-    private func indicatorAnimateTo(index: Int) {
+    private func animateTo(index: Int) {
         indicator.layer.removeAllAnimations()
         let toItem = tabStackView.arrangedSubviews[index]
         let toItemRect = toItem.convert(toItem.bounds, to: tabScrollView)
@@ -181,11 +161,9 @@ extension TabView {
             return
         }
 
-        guard !tabStackView.arrangedSubviews.isEmpty,
-              (0...tabStackView.arrangedSubviews.count-1).contains(currentIndex) else { return }
-
-        let shortenMoveAnimator = UIViewPropertyAnimator(duration: singleAnimationDuration, curve: .easeIn) { [weak self] in
+        let shortenMoveAnimator = UIViewPropertyAnimator(duration: singleAnimationDuration, curve: .easeInOut) { [weak self] in
             guard let self = self else { return }
+            updateContentOffset(index: index)
             indicator.frame.origin.x = toItemRect.minX + (toItemRect.width - indicatorShortenWidth) / 2
             indicator.frame.size.width = indicatorShortenWidth
         }
@@ -198,5 +176,19 @@ extension TabView {
             elongateAnimator.startAnimation()
         }
         shortenMoveAnimator.startAnimation()
+    }
+
+    private func updateContentOffset(index: Int) {
+        let item = tabStackView.arrangedSubviews[index]
+        let itemRect = item.convert(item.bounds, to: self)
+        let horizontalOffsetX = horizontalOffsetToMiddle(rect: itemRect, to: self)
+        let targetOffsetX = tabScrollView.contentOffset.x + horizontalOffsetX
+        let contentOffsetX = max(0, min(targetOffsetX, tabScrollView.contentSize.width - self.frame.width))
+        tabScrollView.contentOffset.x = contentOffsetX
+    }
+
+    private func horizontalOffsetToMiddle(rect: CGRect, to view: UIView) -> CGFloat {
+        let middleX = (view.frame.width - rect.width) / 2
+        return rect.minX - middleX
     }
 }
