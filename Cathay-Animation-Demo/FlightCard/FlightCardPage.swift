@@ -14,6 +14,7 @@ protocol FlightCardPageDelegate: AnyObject {
 class FlightCardPage: UIViewController {
     weak var delegate: FlightCardPageDelegate?
     private let date: String
+    private let superViewModel: FlightCardViewModel
     private var flightModels = [FlightCardModel]()
     private(set) var displayingIndexPaths = Set<IndexPath>()
     private var sortedDisplayingIndexPaths: [IndexPath] {
@@ -30,8 +31,9 @@ class FlightCardPage: UIViewController {
         return tableView
     }()
 
-    init(date: String) {
+    init(date: String, viewModel: FlightCardViewModel) {
         self.date = date
+        self.superViewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -56,7 +58,7 @@ class FlightCardPage: UIViewController {
         MockNetworkHelper.requestFlights(date: date) { [weak self] models in
             guard let self = self else { return }
             flightModels = models.map({ FlightCardModel(id: $0.id) })
-            view.isUserInteractionEnabled = false
+            superViewModel.isAnimating = true
             tableView.reloadData()
             tableView.performBatchUpdates {
                 self.tableView.reloadData()
@@ -78,7 +80,7 @@ extension FlightCardPage: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(FlightCardTableViewCell.self)", for: indexPath) as? FlightCardTableViewCell else {
             fatalError("TableView only support FlightCardTableViewCell")
         }
-        cell.setup(flightModel: flightModel, finishLoading: view.isUserInteractionEnabled)
+        cell.setup(flightModel: flightModel, finishLoading: superViewModel.isAnimating == false)
         return cell
     }
 }
@@ -109,13 +111,13 @@ extension FlightCardPage: UITableViewDelegate {
 // MARK: - Animation
 extension FlightCardPage {
     private func fadeIn() {
-        view.isUserInteractionEnabled = false
+        superViewModel.isAnimating = true
         enumerateDisplayingCells { [weak self] cell, index, isLast in
             let delay: Double = 0.1 * Double(index)
             cell.fadeIn(delay: delay) {
                 if isLast {
-                    self?.view.isUserInteractionEnabled = true
                     self?.tableView.reloadData()
+                    self?.superViewModel.isAnimating = false
                 }
             }
         }
@@ -129,13 +131,13 @@ extension FlightCardPage {
     }
 
     func flyIn(direction: UIPageViewController.NavigationDirection) {
-        view.isUserInteractionEnabled = false
+        superViewModel.isAnimating = true
         enumerateDisplayingCells { [weak self] cell, index, isLast in
             let duration: TimeInterval = 0.2 + 0.05 * Double(index)
             cell.flyIn(duration: duration) {
                 if isLast {
-                    self?.view.isUserInteractionEnabled = true
                     self?.tableView.reloadData()
+                    self?.superViewModel.isAnimating = false
                 }
             }
         }
