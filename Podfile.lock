@@ -1,4 +1,5 @@
 PODS:
+  - HorizonCalendar (2.0.0)
   - PanModal (1.2.7)
   - SDWebImage (5.16.0):
     - SDWebImage/Core (= 5.16.0)
@@ -6,21 +7,24 @@ PODS:
   - SnapKit (5.6.0)
 
 DEPENDENCIES:
+  - HorizonCalendar
   - PanModal
   - SDWebImage (~> 5.16.0)
   - SnapKit (~> 5.6.0)
 
 SPEC REPOS:
   trunk:
+    - HorizonCalendar
     - PanModal
     - SDWebImage
     - SnapKit
 
 SPEC CHECKSUMS:
+  HorizonCalendar: 21e600058a8f4d407c79ef7848beda692c53a484
   PanModal: 3e16ead1a907fb06f4df3f13492fd00149fa4974
   SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 68cb5f4bad2edacd8ee0cc0b0207e0c36fec4113
+PODFILE CHECKSUM: 875db7ec46e2a51736197ec6920eb34aa51be25f
 
 COCOAPODS: 1.15.2

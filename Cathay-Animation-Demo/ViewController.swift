@@ -69,6 +69,9 @@ extension ViewController: UITableViewDelegate {
         case .bottomSheet_panModal:
             let vc = PanModalViewController()
             self.presentPanModal(vc)
+        case .airbnb_calender:
+            let vc = AirbnbCalenderViewController()
+            self.present(vc, animated: true)
         }
     }
 }
@@ -79,6 +82,7 @@ extension ViewController {
         case bottomSheet_selfMake
         case bottomSheet_system
         case bottomSheet_panModal
+        case airbnb_calender
 
         var title: String {
             switch self {
@@ -90,6 +94,8 @@ extension ViewController {
                 return "BottomSheet System (iOS 15+)"
             case .bottomSheet_panModal:
                 return "BottomSheet PanModal"
+            case .airbnb_calender:
+                return "Airbnb Calender"
             }
         }
     }
