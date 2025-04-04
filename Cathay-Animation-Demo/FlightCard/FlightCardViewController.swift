@@ -13,7 +13,11 @@ class FlightCardViewController: UIViewController {
     private var currentIndex: Int = 0
     private let shortenFactor: CGFloat = 1 / 3
     private var topSafeInset: CGFloat = 0.0
-    private var anchoredContentOffsetY: CGFloat = 0.0
+    private var anchoredContentOffsetY: CGFloat = 0.0 {
+        didSet {
+            layoutPageController()
+        }
+    }
     private var isMainScrollViewAnchored: Bool {
         return mainScrollView.contentOffset.y.rounded() >= anchoredContentOffsetY.rounded()
     }
@@ -76,7 +80,6 @@ class FlightCardViewController: UIViewController {
             anchoredContentOffsetY = view.safeAreaInsets.top / shortenFactor
             navigationController?.setNavigationBarHidden(true, animated: false)
         }
-        layoutPageController()
     }
 
     private func setupUI() {
